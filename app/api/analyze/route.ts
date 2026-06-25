@@ -12,39 +12,26 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const MAX_FILES = 10;
 
 const bodySchema = z.object({
-  images: z
-    .array(
-      z.object({
-        data: z.string().min(1),
-        mediaType: z.string(),
-      })
-    )
-    .min(1)
-    .max(MAX_FILES),
+  images: z.array(z.object({ data: z.string().min(1), mediaType: z.string() })).min(1).max(MAX_FILES),
   description: z.string().max(500).optional().default(""),
   platform: z.enum(["olx", "vinted", "both"]),
   language: z.enum(["ro", "en"]).default("ro"),
+  vintedType: z.enum(["original", "replica"]).optional(),
 });
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for") ?? "unknown";
   const rateCheck = checkRateLimit(ip, 10, 60_000);
   if (!rateCheck.allowed) {
-    return NextResponse.json(
-      { error: "Prea multe cereri. Încearcă din nou mai târziu." },
-      {
-        status: 429,
-        headers: { "Retry-After": String(rateCheck.retryAfter) },
-      }
-    );
+    return NextResponse.json({ error: "Prea multe cereri. Incearca din nou mai tarziu." }, { status: 429, headers: { "Retry-After": String(rateCheck.retryAfter) } });
   }
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Autentificare necesară" }, { status: 401 });
+    return NextResponse.json({ error: "Autentificare necesara" }, { status: 401 });
   }
 
-  let body;
+  let body: z.infer<typeof bodySchema>;
   try {
     body = bodySchema.parse(await req.json());
   } catch {
@@ -53,43 +40,26 @@ export async function POST(req: NextRequest) {
 
   for (const img of body.images) {
     if (!ALLOWED_MIME_TYPES.includes(img.mediaType)) {
-      return NextResponse.json(
-        { error: "Tip de fișier neacceptat. Folosește JPEG, PNG sau WebP." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Tip de fisier neacceptat. Foloseste JPEG, PNG sau WebP." }, { status: 400 });
     }
     const sizeBytes = Math.ceil((img.data.length * 3) / 4);
     if (sizeBytes > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { error: "O poză depășește 10MB." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "O poza depaseste 10MB." }, { status: 400 });
     }
   }
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
   const usageCheck = await checkAndIncrementUsage(session.user.id, user?.plan ?? "free");
   if (!usageCheck.allowed) {
-    return NextResponse.json(
-      {
-        error: "Limita zilnică atinsă",
-        used: usageCheck.used,
-        limit: usageCheck.limit,
-        code: "LIMIT_REACHED",
-      },
-      { status: 403 }
-    );
+    return NextResponse.json({ error: "Limita zilnica atinsa", used: usageCheck.used, limit: usageCheck.limit, code: "LIMIT_REACHED" }, { status: 403 });
   }
 
   try {
-    const result = await analyzeListingImages(
-      body.images,
-      body.description,
-      body.platform,
-      body.language
-    );
+    const result = await analyzeListingImages(body.images, body.description, body.platform, body.language, body.vintedType);
+    const hasMarketAccess = ["proplus", "business"].includes(user?.plan ?? "") || (user as { role?: string } | null)?.role === "admin";
+    if (!hasMarketAccess && result.market) delete result.market;
     return NextResponse.json(result);
   } catch {
-    return NextResponse.json({ error: "Eroare AI. Încearcă din nou." }, { status: 500 });
+    return NextResponse.json({ error: "Eroare AI. Incearca din nou." }, { status: 500 });
   }
 }

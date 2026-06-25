@@ -1,162 +1,195 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
-import { ArrowRight, Zap, Shield, Clock } from "lucide-react";
+import gsap from "gsap";
+import { ArrowRight, Star, Zap, CheckCircle } from "lucide-react";
 
 export default function Hero() {
   const t = useTranslations("hero");
   const locale = useLocale();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const badgeRef  = useRef<HTMLDivElement>(null);
+  const headRef   = useRef<HTMLHeadingElement>(null);
+  const subRef    = useRef<HTMLParagraphElement>(null);
+  const ctaRef    = useRef<HTMLDivElement>(null);
+  const trustRef  = useRef<HTMLDivElement>(null);
+  const cardRef   = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+      tl.fromTo(badgeRef.current,
+          { opacity: 0, y: 20, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.7 }, 0.3)
+
+        .fromTo(headRef.current?.querySelectorAll(".word") ?? [],
+          { opacity: 0, y: 64, rotateX: -20 },
+          { opacity: 1, y: 0, rotateX: 0, duration: 0.85, stagger: 0.08 }, 0.55)
+
+        .fromTo(subRef.current,
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 0.7 }, 1.1)
+
+        .fromTo(ctaRef.current?.children ?? [],
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }, 1.3)
+
+        .fromTo(trustRef.current,
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.55 }, 1.55)
+
+        .fromTo(cardRef.current,
+          { opacity: 0, x: 56, rotateY: 6 },
+          { opacity: 1, x: 0, rotateY: 0, duration: 1.1, ease: "power3.out" }, 0.7);
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const words = t("title").split(" ");
 
   return (
-    <section style={{ padding: "80px 24px 64px", textAlign: "center", maxWidth: "1200px", margin: "0 auto" }}>
-      <div className="animate-fade-in-up">
-        <span className="badge badge-primary" style={{ marginBottom: "24px", display: "inline-flex" }}>
-          <Zap size={12} style={{ marginRight: "6px" }} />
-          {t("badge")}
-        </span>
+    <section
+      ref={containerRef}
+      style={{ position: "relative", minHeight: "100dvh", display: "flex", alignItems: "center", overflow: "hidden", paddingTop: "68px" }}
+    >
+      {/* Ambient orbs — static, no animation */}
+      <div className="glow-orb" style={{ width: "700px", height: "700px", background: "radial-gradient(circle, rgba(212,153,26,0.13) 0%, transparent 70%)", top: "-180px", left: "-200px" }} />
+      <div className="glow-orb" style={{ width: "500px", height: "500px", background: "radial-gradient(circle, rgba(224,123,57,0.09) 0%, transparent 70%)", bottom: "-100px", right: "-80px" }} />
 
-        <h1
-          style={{
-            fontFamily: "Rubik, sans-serif",
-            fontSize: "clamp(36px, 5vw, 64px)",
-            fontWeight: 700,
-            lineHeight: 1.1,
-            color: "var(--color-foreground)",
-            marginBottom: "24px",
-            letterSpacing: "-0.02em",
-          }}
-        >
-          {locale === "ro" ? (
-            <>
-              Vinde de <span style={{ color: "var(--color-primary)" }}>3×</span> mai repede
-              <br />pe OLX și Vinted
-            </>
-          ) : (
-            <>
-              Sell <span style={{ color: "var(--color-primary)" }}>3×</span> faster
-              <br />on OLX and Vinted
-            </>
-          )}
-        </h1>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "80px 28px", width: "100%", position: "relative", zIndex: 10, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center" }}>
 
-        <p
-          style={{
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: "var(--color-muted-foreground)",
-            maxWidth: "600px",
-            margin: "0 auto 40px",
-            lineHeight: 1.7,
-          }}
-        >
-          {t("subtitle")}
-        </p>
+        {/* ── Left — copy ──────────────────────────────────────── */}
+        <div>
+          <div ref={badgeRef} style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 14px 6px 8px", borderRadius: "24px", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.25)", marginBottom: "32px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "5px", background: "rgba(212,153,26,0.2)", borderRadius: "16px", padding: "3px 10px" }}>
+              <Zap size={11} color="var(--primary-light)" fill="var(--primary-light)" />
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", fontFamily: "Rubik,sans-serif", letterSpacing: "0.06em" }}>AI</span>
+            </div>
+            <span style={{ fontSize: "13px", fontWeight: 500, color: "var(--color-muted-foreground)" }}>{t("badge")}</span>
+          </div>
 
-        <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginBottom: "48px" }}>
-          <Link href={`/${locale}/auth/signup`} className="btn-primary" style={{ fontSize: "16px", padding: "14px 28px" }}>
-            {t("cta_primary")}
-            <ArrowRight size={18} />
-          </Link>
-          <Link href={`/${locale}/tool`} className="btn-secondary" style={{ fontSize: "16px", padding: "14px 28px" }}>
-            {t("cta_secondary")}
-          </Link>
-        </div>
-
-        <p style={{ fontSize: "13px", color: "var(--color-muted-foreground)" }}>
-          {t("trust")}
-        </p>
-      </div>
-
-      {/* Visual demo card */}
-      <div
-        style={{
-          marginTop: "64px",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "16px",
-          maxWidth: "900px",
-          margin: "64px auto 0",
-        }}
-      >
-        {/* Upload side */}
-        <div className="card" style={{ padding: "24px", textAlign: "left" }}>
-          <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-            {[1, 2, 3].map((i) => (
-              <div
+          <h1
+            ref={headRef}
+            className="display-text"
+            style={{ fontSize: "clamp(40px,5.2vw,76px)", color: "var(--color-foreground)", marginBottom: "24px", perspective: "800px" }}
+          >
+            {words.map((word, i) => (
+              <span
                 key={i}
-                style={{
-                  flex: 1,
-                  height: "80px",
-                  borderRadius: "8px",
-                  background: i === 1 ? "rgba(124,58,237,0.08)" : "var(--color-muted)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: `2px ${i === 1 ? "solid var(--color-primary)" : "dashed var(--color-border)"}`,
-                }}
+                className="word"
+                style={{ display: "inline-block", marginRight: "0.28em", color: i === 2 ? "var(--primary-light)" : "var(--color-foreground)", willChange: "transform, opacity" }}
               >
-                {i === 1 && <Zap size={20} color="var(--color-primary)" />}
+                {word}
+              </span>
+            ))}
+          </h1>
+
+          <p ref={subRef} style={{ fontSize: "clamp(16px,1.6vw,19px)", color: "var(--color-muted-foreground)", lineHeight: 1.7, maxWidth: "500px", marginBottom: "40px" }}>
+            {t("subtitle")}
+          </p>
+
+          <div ref={ctaRef} style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "40px" }}>
+            <Link href={`/${locale}/auth/signup`} className="btn-primary" style={{ fontSize: "16px", padding: "15px 32px", gap: "10px" }}>
+              {t("cta_primary")} <ArrowRight size={17} />
+            </Link>
+            <Link href={`/${locale}/pricing`} className="btn-secondary" style={{ fontSize: "16px", padding: "15px 28px" }}>
+              {t("cta_secondary")}
+            </Link>
+          </div>
+
+          <div ref={trustRef} style={{ display: "flex", alignItems: "center", gap: "24px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <div style={{ display: "flex" }}>
+                {[1,2,3,4,5].map(s => <Star key={s} size={13} color="#F59E0B" fill="#F59E0B" />)}
+              </div>
+              <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)", fontWeight: 500 }}>4.9/5</span>
+            </div>
+            {[t("trust1"), t("trust2")].map(item => (
+              <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <CheckCircle size={14} color="var(--success)" />
+                <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)" }}>{item}</span>
               </div>
             ))}
           </div>
-          <div style={{ height: "10px", borderRadius: "5px", background: "var(--color-muted)", width: "60%", marginBottom: "8px" }} />
-          <div style={{ height: "10px", borderRadius: "5px", background: "var(--color-muted)", width: "40%" }} />
-          <p style={{ fontSize: "12px", color: "var(--color-muted-foreground)", marginTop: "12px", fontWeight: 500 }}>
-            {locale === "ro" ? "Poze încărcate" : "Photos uploaded"}
-          </p>
         </div>
 
-        {/* AI arrow */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div
-            style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 8px 20px rgba(124,58,237,0.3)",
-            }}
-          >
-            <Zap size={22} color="white" fill="white" />
-          </div>
-        </div>
+        {/* ── Right — product preview card ─────────────────────── */}
+        <div ref={cardRef} className="hero-preview" style={{ position: "relative", perspective: "1000px" }}>
+          <div className="glass-card" style={{ padding: "24px", boxShadow: "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,153,26,0.18)" }}>
+            {/* Topbar */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", paddingBottom: "14px", borderBottom: "1px solid rgba(212,153,26,0.1)" }}>
+              <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "linear-gradient(135deg,#D4991A,#A67800)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Zap size={14} color="white" fill="white" />
+              </div>
+              <span style={{ fontFamily: "Rubik,sans-serif", fontWeight: 700, fontSize: "13px", color: "var(--color-foreground)" }}>AnunțAI</span>
+              <span style={{ fontSize: "10px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--primary-light)", background: "rgba(212,153,26,0.13)", border: "1px solid rgba(212,153,26,0.28)", borderRadius: "12px", padding: "3px 9px", marginLeft: "auto" }}>AI Ready</span>
+            </div>
 
-        {/* Result side */}
-        <div className="card" style={{ padding: "24px", textAlign: "left" }}>
-          <div className="badge badge-success" style={{ marginBottom: "12px", fontSize: "11px" }}>
-            {locale === "ro" ? "Gata de postat" : "Ready to post"}
+            {/* Scores */}
+            <div style={{ marginBottom: "16px" }}>
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "var(--color-muted-foreground)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "8px" }}>Photo Quality</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "6px" }}>
+                {[{s:9,c:"#10B981"},{s:7,c:"#F59E0B"},{s:9,c:"#10B981"}].map(({s,c},i) => (
+                  <div key={i} style={{ background: "rgba(255,255,255,0.04)", borderRadius: "8px", padding: "8px", textAlign: "center", border: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div style={{ fontSize: "20px", fontWeight: 800, fontFamily: "Rubik,sans-serif", color: c }}>{s}</div>
+                    <div style={{ fontSize: "9px", color: "var(--color-muted-foreground)", marginTop: "2px" }}>/10</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Title */}
+            <div style={{ marginBottom: "14px" }}>
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "var(--color-muted-foreground)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "6px" }}>Generated Title</div>
+              <div style={{ background: "rgba(212,153,26,0.08)", borderRadius: "8px", padding: "10px 12px", border: "1px solid rgba(212,153,26,0.15)" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik,sans-serif", lineHeight: 1.4 }}>iPhone 13 Pro 128GB Graphite — Impecabil, Garanție</span>
+              </div>
+            </div>
+
+            {/* Tags */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {["iPhone 13","Apple","128GB","5G","Face ID","Sigilat"].map(tag => (
+                <span key={tag} className="badge badge-primary" style={{ fontSize: "10px", padding: "3px 9px" }}>{tag}</span>
+              ))}
+            </div>
           </div>
-          <div style={{ height: "12px", borderRadius: "6px", background: "rgba(124,58,237,0.15)", width: "85%", marginBottom: "8px" }} />
-          <div style={{ height: "8px", borderRadius: "4px", background: "var(--color-muted)", width: "70%", marginBottom: "6px" }} />
-          <div style={{ height: "8px", borderRadius: "4px", background: "var(--color-muted)", width: "55%", marginBottom: "12px" }} />
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            {[40, 55, 35, 48].map((w, i) => (
-              <div key={i} style={{ height: "22px", width: `${w}px`, borderRadius: "11px", background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)" }} />
-            ))}
+
+          {/* Floating chips */}
+          <div className="glass-card" style={{ position: "absolute", top: "-22px", right: "-28px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
+            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#10B981,#059669)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <CheckCircle size={17} color="white" />
+            </div>
+            <div>
+              <div style={{ fontSize: "12px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>Salvat!</div>
+              <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)" }}>OLX + Vinted</div>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: "8px", marginTop: "16px" }}>
-            <Clock size={12} color="var(--color-muted-foreground)" />
-            <span style={{ fontSize: "11px", color: "var(--color-muted-foreground)" }}>
-              {locale === "ro" ? "Generat în 8 secunde" : "Generated in 8 seconds"}
-            </span>
+
+          <div className="glass-card" style={{ position: "absolute", bottom: "-18px", left: "-24px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
+            <Zap size={20} color="#F59E0B" fill="#F59E0B" />
+            <div>
+              <div style={{ fontSize: "12px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>10 secunde</div>
+              <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)" }}>generare AI</div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Trust badges */}
-      <div style={{ display: "flex", gap: "24px", justifyContent: "center", flexWrap: "wrap", marginTop: "48px" }}>
-        {[
-          { icon: <Shield size={16} />, text: locale === "ro" ? "Date securizate" : "Secure data" },
-          { icon: <Zap size={16} />, text: "GDPR" },
-          { icon: <Clock size={16} />, text: locale === "ro" ? "Fără card necesar" : "No card required" },
-        ].map((item, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--color-muted-foreground)", fontSize: "13px" }}>
-            <span style={{ color: "var(--color-primary)" }}>{item.icon}</span>
-            {item.text}
-          </div>
-        ))}
+      {/* Scroll line */}
+      <div style={{ position: "absolute", bottom: "36px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ width: "1px", height: "52px", background: "linear-gradient(to bottom, transparent, rgba(212,153,26,0.5))" }} />
       </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .hero-preview { display: none; }
+          section > div { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 }

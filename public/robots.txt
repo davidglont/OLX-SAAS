@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /ro/dashboard
+Disallow: /en/dashboard
+Disallow: /ro/account
+Disallow: /en/account
+
+Sitemap: https://anuntai.ro/sitemap.xml

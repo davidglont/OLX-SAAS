@@ -4,10 +4,15 @@
     "tool": "Generate Listing",
     "pricing": "Pricing",
     "dashboard": "My Listings",
-    "account": "My Account",
+    "profile_settings": "Profile settings",
+      "account": "My Account",
     "login": "Log In",
     "signup": "Sign Up",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "tool_price": "Price Estimator",
+    "tool_titles": "A/B Title Generator",
+    "tool_check": "Listing Checker",
+    "tools_menu": "Tools"
   },
   "hero": {
     "badge": "New · AI for sellers",
@@ -15,9 +20,12 @@
     "subtitle": "Upload your photos, AI does the magic — optimized title, description and tags in 10 seconds. Your listings will stand out.",
     "cta_primary": "Try for free",
     "cta_secondary": "See how it works",
-    "trust": "No credit card · Free forever"
+    "trust": "No credit card · Free forever",
+    "trust1": "No credit card",
+    "trust2": "Free forever"
   },
   "howItWorks": {
+    "eyebrow": "How it works",
     "title": "Simple as 1, 2, 3",
     "subtitle": "Generate a professional listing in less than a minute",
     "step1_title": "Upload photos",
@@ -28,15 +36,25 @@
     "step3_desc": "Title, description and tags ready to copy directly to OLX or Vinted. One single click."
   },
   "beforeAfter": {
+    "eyebrow": "Before vs. After",
     "title": "The difference is clear",
+    "subtitle": "Same product, completely different listing",
     "before_label": "Typical listing",
     "after_label": "Generated with AnuntAI",
     "before_title": "selling phone",
     "before_desc": "good condition, price negotiable, call me",
+    "before_tag1": "phone",
+    "before_tag2": "second hand",
     "after_title": "iPhone 13 Pro 128GB Graphite | Excellent Condition | Battery 89%",
-    "after_desc": "iPhone 13 Pro in impeccable condition, carefully used. Screen without scratches, original case. Includes: original box, Lightning cable, Apple silicone case. Battery at 89% (verified in settings). Ideal for professional photography with 12MP ProRAW triple camera."
+    "after_desc": "iPhone 13 Pro in impeccable condition, carefully used. Screen without scratches, original case. Includes: original box, Lightning cable, Apple silicone case. Battery at 89% (verified in settings). Ideal for professional photography with 12MP ProRAW triple camera.",
+    "after_tag1": "iPhone 13 Pro",
+    "after_tag2": "Apple",
+    "after_tag3": "128GB",
+    "after_tag4": "Graphite",
+    "after_tag5": "5G"
   },
   "socialProof": {
+    "eyebrow": "Social proof",
     "title": "Join those who sell faster",
     "stat1_value": "3×",
     "stat1_label": "more views",
@@ -55,10 +73,13 @@
     "t3_location": "Timisoara"
   },
   "pricing": {
+    "eyebrow": "Pricing",
     "title": "Simple and transparent",
     "subtitle": "Choose the plan that fits your needs",
     "monthly": "per month",
     "most_popular": "Most popular",
+    "forever_free": "Free forever",
+    "processing": "Processing...",
     "cta_free": "Start free",
     "cta_paid": "Subscribe",
     "free_name": "Free",
@@ -75,7 +96,12 @@
     "feature_copy": "One-click copy",
     "feature_history": "Listing history",
     "feature_platforms": "OLX + Vinted",
-    "feature_priority": "Priority support"
+    "feature_priority": "Priority support",
+    "feature_market_basic": "AI Market Analysis",
+    "feature_market_advanced": "Advanced trend research",
+    "feature_price_opt": "Competitive price optimization",
+    "feature_best_days": "Optimal posting days",
+    "feature_category_report": "Detailed category report"
   },
   "tool": {
     "title": "Generate Your Listing",
@@ -107,7 +133,8 @@
     "upgrade_btn": "Upgrade now",
     "language_label": "Generated content language",
     "lang_ro": "Romanian",
-    "lang_en": "English"
+    "lang_en": "English",
+    "error": "Something went wrong. Please try again."
   },
   "dashboard": {
     "title": "My Listings",

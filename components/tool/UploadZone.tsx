@@ -32,57 +32,91 @@ export default function UploadZone({ files, onChange, recommendedIndex }: Upload
 
   return (
     <div>
-      {/* Drop area */}
       <div
         {...getRootProps()}
         style={{
-          border: `2px dashed ${isDragActive ? "var(--color-primary)" : "var(--color-border)"}`,
-          borderRadius: "16px",
-          padding: "40px 24px",
+          border: `2px dashed ${isDragActive ? "var(--primary-light)" : "rgba(212,153,26,0.28)"}`,
+          borderRadius: "18px",
+          padding: "44px 24px",
           textAlign: "center",
-          background: isDragActive ? "rgba(124,58,237,0.04)" : "white",
+          background: isDragActive
+            ? "rgba(212,153,26,0.06)"
+            : "rgba(10,10,24,0.55)",
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: "background 0.25s, border-color 0.25s",
+          backdropFilter: "blur(10px)",
+          boxShadow: isDragActive ? "0 0 0 4px rgba(212,153,26,0.1) inset" : "none",
         }}
       >
         <input {...getInputProps()} aria-label={t("upload_title")} />
-        <div style={{ width: "52px", height: "52px", borderRadius: "14px", background: "rgba(124,58,237,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-          <Upload size={24} color="var(--color-primary)" />
+        <div style={{
+          width: "60px", height: "60px", borderRadius: "18px",
+          background: isDragActive ? "rgba(212,153,26,0.2)" : "rgba(212,153,26,0.1)",
+          border: `1px solid ${isDragActive ? "rgba(212,153,26,0.5)" : "rgba(212,153,26,0.22)"}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          margin: "0 auto 18px",
+          transition: "background 0.25s, border-color 0.25s",
+          boxShadow: isDragActive ? "0 8px 24px rgba(212,153,26,0.2)" : "none",
+        }}>
+          <Upload size={26} color={isDragActive ? "var(--primary-light)" : "var(--primary)"} />
         </div>
-        <p style={{ fontFamily: "Rubik, sans-serif", fontWeight: 600, fontSize: "15px", marginBottom: "6px" }}>
+        <p style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "15px", marginBottom: "6px", color: "var(--color-foreground)" }}>
           {t("upload_title")}
         </p>
-        <p style={{ fontSize: "13px", color: "var(--color-muted-foreground)", marginBottom: "8px" }}>
+        <p style={{ fontSize: "13px", color: "var(--color-muted-foreground)", marginBottom: "14px", lineHeight: 1.6 }}>
           {t("upload_desc")}
         </p>
-        <span style={{ fontSize: "12px", color: "var(--color-muted-foreground)", background: "var(--color-muted)", padding: "3px 10px", borderRadius: "6px" }}>
+        <span style={{
+          fontSize: "11px", color: "var(--primary-light)",
+          background: "rgba(212,153,26,0.08)",
+          border: "1px solid rgba(212,153,26,0.2)",
+          padding: "4px 14px", borderRadius: "20px",
+          fontFamily: "Rubik, sans-serif", fontWeight: 700, letterSpacing: "0.04em",
+        }}>
           {t("upload_formats")}
         </span>
       </div>
 
-      {/* Previews */}
       {files.length > 0 && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: "10px", marginTop: "16px" }}>
           {files.map((file, i) => {
             const url = URL.createObjectURL(file);
             const isRecommended = recommendedIndex === i;
             return (
-              <div key={`${file.name}-${i}`} style={{ position: "relative", borderRadius: "12px", overflow: "hidden", aspectRatio: "1", border: isRecommended ? "2.5px solid var(--color-primary)" : "1.5px solid var(--color-border)" }}>
-                <img src={url} alt={file.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onLoad={() => URL.revokeObjectURL(url)} />
+              <div
+                key={`${file.name}-${i}`}
+                style={{
+                  position: "relative",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  aspectRatio: "1",
+                  border: isRecommended
+                    ? "2.5px solid var(--primary-light)"
+                    : "1px solid rgba(212,153,26,0.18)",
+                  boxShadow: isRecommended ? "0 0 18px rgba(212,153,26,0.3)" : "none",
+                  transition: "box-shadow 0.2s",
+                }}
+              >
+                <img
+                  src={url}
+                  alt={file.name}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onLoad={() => URL.revokeObjectURL(url)}
+                />
                 {isRecommended && (
-                  <div style={{ position: "absolute", bottom: "4px", left: "4px", background: "var(--color-primary)", borderRadius: "6px", padding: "2px 6px", display: "flex", alignItems: "center", gap: "3px" }}>
+                  <div style={{ position: "absolute", bottom: "4px", left: "4px", background: "var(--primary)", borderRadius: "6px", padding: "2px 7px", display: "flex", alignItems: "center", gap: "3px" }}>
                     <Star size={9} color="white" fill="white" />
                     <span style={{ fontSize: "9px", color: "white", fontWeight: 700, fontFamily: "Rubik, sans-serif" }}>Cover</span>
                   </div>
                 )}
                 <button
                   onClick={(e) => { e.stopPropagation(); remove(i); }}
-                  aria-label="Elimină poza"
-                  style={{ position: "absolute", top: "4px", right: "4px", width: "22px", height: "22px", borderRadius: "50%", background: "rgba(0,0,0,0.6)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  aria-label="Elimina poza"
+                  style={{ position: "absolute", top: "4px", right: "4px", width: "22px", height: "22px", borderRadius: "50%", background: "rgba(0,0,0,0.72)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}
                 >
                   <X size={12} color="white" />
                 </button>
-                <div style={{ position: "absolute", bottom: isRecommended ? "24px" : "4px", right: "4px", background: "rgba(0,0,0,0.55)", borderRadius: "5px", padding: "1px 5px" }}>
+                <div style={{ position: "absolute", bottom: isRecommended ? "24px" : "4px", right: "4px", background: "rgba(0,0,0,0.6)", borderRadius: "5px", padding: "1px 5px" }}>
                   <span style={{ fontSize: "10px", color: "white", fontWeight: 600 }}>{i + 1}</span>
                 </div>
               </div>

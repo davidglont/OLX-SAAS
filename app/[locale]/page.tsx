@@ -4,6 +4,7 @@ import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import BeforeAfter from "@/components/landing/BeforeAfter";
 import SocialProof from "@/components/landing/SocialProof";
+import RecommendationsSection from "@/components/landing/RecommendationsSection";
 import PricingSection from "@/components/landing/PricingSection";
 
 export default function LandingPage() {
@@ -15,6 +16,7 @@ export default function LandingPage() {
         <HowItWorks />
         <BeforeAfter />
         <SocialProof />
+        <RecommendationsSection />
         <PricingSection />
       </main>
       <Footer />

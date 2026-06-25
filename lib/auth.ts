@@ -1,6 +1,5 @@
 import { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "./db";
@@ -13,15 +12,11 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/login",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Parolă", type: "password" },
+        password: { label: "Parola", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
@@ -49,6 +44,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
         token.plan = dbUser?.plan ?? "free";
+        token.role = dbUser?.role ?? "user";
       }
       return token;
     },
@@ -56,6 +52,7 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.plan = token.plan as string;
+        session.user.role = token.role as string;
       }
       return session;
     },

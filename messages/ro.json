@@ -4,10 +4,15 @@
     "tool": "Generează Anunț",
     "pricing": "Prețuri",
     "dashboard": "Anunțurile Mele",
-    "account": "Contul Meu",
+    "profile_settings": "Setari profil",
+      "account": "Contul meu",
     "login": "Autentificare",
     "signup": "Înregistrare",
-    "logout": "Deconectare"
+    "logout": "Deconectare",
+    "tool_price": "Estimator Pret",
+    "tool_titles": "Generator Titluri A/B",
+    "tool_check": "Checker Anunt",
+    "tools_menu": "Instrumente"
   },
   "hero": {
     "badge": "Nou · AI pentru vânzători",
@@ -15,9 +20,12 @@
     "subtitle": "Încarci pozele, AI-ul face magia — titlu, descriere și taguri optimizate în 10 secunde. Anunțurile tale vor ieși în evidență.",
     "cta_primary": "Încearcă gratuit",
     "cta_secondary": "Vezi cum funcționează",
-    "trust": "Fără card de credit · Gratuit pentru totdeauna"
+    "trust": "Fără card de credit · Gratuit pentru totdeauna",
+    "trust1": "Fără card de credit",
+    "trust2": "Gratuit pentru totdeauna"
   },
   "howItWorks": {
+    "eyebrow": "Cum funcționează",
     "title": "Simplu ca 1, 2, 3",
     "subtitle": "Generezi un anunț profesional în mai puțin de un minut",
     "step1_title": "Încarci pozele",
@@ -28,15 +36,25 @@
     "step3_desc": "Titlu, descriere și taguri gata de copiat direct pe OLX sau Vinted. Un singur click."
   },
   "beforeAfter": {
+    "eyebrow": "Înainte vs. După",
     "title": "Diferența e vizibilă",
+    "subtitle": "Același produs, descriere complet diferită",
     "before_label": "Anunț obișnuit",
     "after_label": "Generat cu AnunțAI",
     "before_title": "vand telefon",
     "before_desc": "stare buna, pret negociabil, sun la nr de tel",
+    "before_tag1": "telefon",
+    "before_tag2": "second hand",
     "after_title": "iPhone 13 Pro 128GB Graphite | Stare Excelentă | Baterie 89%",
-    "after_desc": "iPhone 13 Pro în stare impecabilă, folosit cu grijă. Ecran fără zgârieturi, carcasă originală. Include: cutie originală, cablu Lightning, carcasă silicon Apple. Baterie la 89% (verificat în setări). Ideal pentru fotografie profesională cu camera triplă 12MP ProRAW."
+    "after_desc": "iPhone 13 Pro în stare impecabilă, folosit cu grijă. Ecran fără zgârieturi, carcasă originală. Include: cutie originală, cablu Lightning, carcasă silicon Apple. Baterie la 89% (verificat în setări). Ideal pentru fotografie profesională cu camera triplă 12MP ProRAW.",
+    "after_tag1": "iPhone 13 Pro",
+    "after_tag2": "Apple",
+    "after_tag3": "128GB",
+    "after_tag4": "Graphite",
+    "after_tag5": "5G"
   },
   "socialProof": {
+    "eyebrow": "Social proof",
     "title": "Alătură-te celor care vând mai repede",
     "stat1_value": "3×",
     "stat1_label": "mai multe vizualizări",
@@ -55,10 +73,13 @@
     "t3_location": "Timișoara"
   },
   "pricing": {
+    "eyebrow": "Prețuri",
     "title": "Simplu și transparent",
     "subtitle": "Alege planul potrivit pentru nevoile tale",
     "monthly": "lunar",
     "most_popular": "Cel mai popular",
+    "forever_free": "Gratuit pentru totdeauna",
+    "processing": "Se procesează...",
     "cta_free": "Începe gratuit",
     "cta_paid": "Abonează-te",
     "free_name": "Free",
@@ -75,7 +96,12 @@
     "feature_copy": "Copiere cu un click",
     "feature_history": "Istoric anunțuri",
     "feature_platforms": "OLX + Vinted",
-    "feature_priority": "Suport prioritar"
+    "feature_priority": "Suport prioritar",
+    "feature_market_basic": "Analiza de piata AI",
+    "feature_market_advanced": "Trend research avansat",
+    "feature_price_opt": "Optimizare pret competitiv",
+    "feature_best_days": "Zile optime de postare",
+    "feature_category_report": "Raport categorie detaliat"
   },
   "tool": {
     "title": "Generează Anunțul Tău",
@@ -107,7 +133,8 @@
     "upgrade_btn": "Upgrade acum",
     "language_label": "Limbă conținut generat",
     "lang_ro": "Română",
-    "lang_en": "Engleză"
+    "lang_en": "Engleză",
+    "error": "A apărut o eroare. Încearcă din nou."
   },
   "dashboard": {
     "title": "Anunțurile Mele",
