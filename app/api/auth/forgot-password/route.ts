@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "AnunțAI <noreply@anuntai.ro>",
+          from: "AnunțAI <onboarding@resend.dev>",
           to: [normalized],
           subject: "Resetare parolă AnunțAI",
           html: `
