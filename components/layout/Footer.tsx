@@ -70,6 +70,7 @@ export default function Footer() {
                   { href: `/${locale}/about`, label: locale === "ro" ? "Despre noi" : "About" },
                   { href: `/${locale}/faq`, label: "FAQ" },
                   { href: `/${locale}/contact`, label: "Contact" },
+                  { href: `/${locale}/case-studies`, label: locale === "ro" ? "Studii de caz" : "Case Studies" },
                 ].map(link => (
                   <Link key={link.href} href={link.href} style={{ fontSize: "13px", color: "var(--color-muted-foreground)", textDecoration: "none", transition: "color 0.2s" }}>
                     {link.label}
@@ -123,6 +124,29 @@ export default function Footer() {
               </Link>
             ))}
           </div>
+        </div>
+
+        {/* ANPC / SOL — Romanian legal compliance */}
+        <div style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid rgba(212,153,26,0.06)", display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "center" }}>
+          <a
+            href="https://anpc.ro/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: "11px", color: "var(--color-muted-foreground)", textDecoration: "none", opacity: 0.7 }}
+          >
+            ANPC
+          </a>
+          <a
+            href="https://ec.europa.eu/consumers/odr"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: "11px", color: "var(--color-muted-foreground)", textDecoration: "none", opacity: 0.7 }}
+          >
+            {locale === "ro" ? "Soluționarea Online a Litigiilor (SOL)" : "Online Dispute Resolution (ODR)"}
+          </a>
+          <span style={{ fontSize: "11px", color: "var(--color-muted-foreground)", opacity: 0.5 }}>
+            {locale === "ro" ? "Serviciu furnizat în conformitate cu legislația română și europeană." : "Service provided in compliance with Romanian and EU law."}
+          </span>
         </div>
       </div>
     </footer>
