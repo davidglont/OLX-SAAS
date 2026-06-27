@@ -221,37 +221,36 @@ export async function estimatePrice(
 ): Promise<PriceEstimate> {
   const isRo = language === "ro";
 
-  const productTypeBlock = productType === "replica"
+  const systemMessage = productType === "replica"
     ? (isRo
-      ? `TIP PRODUS: REPLICA / REP\n- Pretul unei replici este 5-20% din pretul originalului\n- Replica Louis Vuitton portofel=80-200 RON | Replica geanta brand=100-300 RON | Replica ceas luxury=50-250 RON\n- NU estima ca original - pretul trebuie sa reflecte ca este replica\n- Mentioneaza in justificare ca este replica`
-      : `PRODUCT TYPE: REPLICA\n- Replica price is 5-20% of the original price\n- Price accordingly as a replica/rep item`)
+      ? `Esti expert in preturi second-hand Romania. REGULA ABSOLUTA: Produsul este o REPLICA/CONTRAFACUTA, NU original. Pretul OBLIGATORIU trebuie sa fie de 5-15% din pretul originalului. Exemple REPLICA pe piata romaneasca: Jordan/Nike/Adidas replica=50-180 RON | Louis Vuitton replica=80-200 RON | Geanta luxury replica=60-250 RON | Ceas luxury replica=40-200 RON | Haine brand replica=30-120 RON. NICIODATA nu estima replica la pretul originalului. Mentioneaza explicit in justificare ca este replica.`
+      : `You are a Romanian second-hand market expert. ABSOLUTE RULE: This is a REPLICA/FAKE product. Price it at 5-15% of the original's value. NEVER price a replica at original price. Note it's a replica in the justification.`)
     : productType === "original"
     ? (isRo
-      ? `TIP PRODUS: ORIGINAL / AUTENTIC\n- Estimeaza ca produs original autentic\n- Verifica autenticitatea prin descriere si calibreaza pretul original`
-      : `PRODUCT TYPE: AUTHENTIC ORIGINAL\n- Estimate as authentic original product`)
-    : "";
+      ? `Esti expert in preturi second-hand Romania. Produsul este ORIGINAL / AUTENTIC. Estimeaza la pretul de piata pentru produse autentice. Calibrare 2025: Jordan 4 original nou=900-1400 RON | Jordan 4 second=600-1000 RON | Nike SB Dunk original=700-2500 RON | Sneakers Nike/Adidas original nou=400-1200 RON | Adidas Yeezy=800-2500 RON.`
+      : `You are a Romanian second-hand market expert. This is an AUTHENTIC/ORIGINAL product. Price it at authentic market value.`)
+    : (isRo
+      ? `Esti expert in preturi pe piata second-hand din Romania (OLX, Vinted, Facebook Marketplace). Estimeaza pretul real de vanzare in RON.`
+      : `You are a Romanian second-hand market pricing expert. Estimate the real selling price in RON.`);
 
-  const prompt = isRo
-    ? `Esti expert in preturi pe piata second-hand din Romania (OLX, Vinted, Facebook Marketplace).
-Analizeaza produsul descris si estimeaza pretul real de vanzare in RON.
-
-${productTypeBlock}
-
-CALIBRARE PIATA ROMANEASCA 2025 (foloseste ca referinta obligatorie):
-Telefoane (second-hand bun): iPhone 16 Pro Max=5500-6500 RON | iPhone 15 Pro Max=4200-5000 RON | iPhone 14 Pro=3000-3800 RON | iPhone 13=1800-2500 RON | Samsung S25 Ultra=4500-5500 RON | Samsung S24=2500-3200 RON | Pixel 9 Pro=3000-3800 RON
-Telefoane (nou sigilat): iPhone 16 Pro Max=6200-7000 RON | Samsung S25 Ultra=5200-6000 RON
-Laptopuri second: MacBook Air M2=4000-5500 RON | MacBook Pro M3=7000-10000 RON | Laptop gaming mid=2500-4500 RON | Laptop office=1200-2800 RON
-Console: PS5 nou=2200-2500 RON | PS5 second=1700-2100 RON | Xbox Series X=2000-2400 RON | Nintendo Switch=1400-1800 RON
+  const calibration = isRo ? `
+CALIBRARE PIATA ROMANEASCA 2025:
+Telefoane second-hand: iPhone 16 Pro Max=5500-6500 RON | iPhone 15 Pro Max=4200-5000 RON | iPhone 14 Pro=3000-3800 RON | iPhone 13=1800-2500 RON | Samsung S25 Ultra=4500-5500 RON | Samsung S24=2500-3200 RON
+Laptopuri: MacBook Air M2=4000-5500 RON | MacBook Pro M3=7000-10000 RON | Laptop gaming=2500-4500 RON
+Console: PS5 nou=2200-2500 RON | PS5 second=1700-2100 RON | Nintendo Switch=1400-1800 RON
 Electronice: AirPods Pro 2=700-1000 RON | iPad Air=2000-3000 RON | Apple Watch S9=1500-2200 RON
-Imbracaminte brand (second): Nike/Adidas sneakers=100-400 RON | Geaca brand=150-500 RON | Ceas second mid=300-800 RON
-Genti/portofele replica brand: Louis Vuitton replica=80-250 RON | Gucci replica=100-300 RON | Chanel replica=150-400 RON
-Genti/portofele original autentic: Louis Vuitton second=1500-4000 RON | Gucci second=1200-3500 RON
+Sneakers ORIGINAL: Jordan 4=900-1400 RON nou | Nike SB Dunk=700-2500 RON | Yeezy=800-2500 RON | Nike/Adidas clasic=300-800 RON
+Sneakers REPLICA: Jordan/Nike/Adidas replica=50-180 RON (OBLIGATORIU mult mai mic decat originalul)
+Genti luxury ORIGINAL second: Louis Vuitton=1500-4000 RON | Gucci=1200-3500 RON
+Genti luxury REPLICA: LV replica=80-200 RON | Gucci replica=80-250 RON
 
-REGULI CRITICE:
-- Pretul second-hand este 50-70% din pretul nou pentru electronice
-- NU estima niciodata mai sus decat pretul de nou din magazine
-- Daca nu esti sigur, estimeaza CONSERVATOR (mai jos = vinde mai repede)
-- Tine cont de starea mentionata (nou=100%, ca nou=85%, buna=70%, acceptabila=55%)
+REGULI:
+- Second-hand = 50-70% din pretul de nou pentru electronice
+- Tine cont de stare: nou=100%, ca nou=85%, buna=70%, acceptabila=55%
+- Replica = INTOTDEAUNA 5-15% din pretul originalului` : "";
+
+  const userPrompt = isRo
+    ? `${calibration}
 
 PRODUS: "${description}"
 
@@ -261,17 +260,10 @@ Returneaza EXCLUSIV JSON valid:
   "max": 250,
   "currency": "RON",
   "suggestedPrice": 200,
-  "justification": "Explicatie concisa de 2-3 propozitii despre de ce acest pret este corect pe piata romaneasca",
-  "negotiationTips": [
-    "Sfat 1 de negociere specific acestui produs",
-    "Sfat 2",
-    "Sfat 3"
-  ]
+  "justification": "2-3 propozitii despre pretul corect pe piata romaneasca",
+  "negotiationTips": ["Sfat 1 specific", "Sfat 2", "Sfat 3"]
 }`
-    : `You are an expert in Romanian second-hand market pricing (OLX, Vinted, Facebook Marketplace).
-Analyze the described product and estimate the real selling price in RON.
-
-PRODUCT: "${description}"
+    : `PRODUCT: "${description}"
 
 Return ONLY valid JSON:
 {
@@ -279,19 +271,18 @@ Return ONLY valid JSON:
   "max": 250,
   "currency": "RON",
   "suggestedPrice": 200,
-  "justification": "Concise 2-3 sentence explanation of why this price is correct on the Romanian market",
-  "negotiationTips": [
-    "Negotiation tip 1 specific to this product",
-    "Tip 2",
-    "Tip 3"
-  ]
+  "justification": "2-3 sentence explanation for the Romanian market",
+  "negotiationTips": ["Tip 1", "Tip 2", "Tip 3"]
 }`;
 
   const response = await getClient().chat.completions.create({
     model: TEXT_MODEL,
     max_tokens: 800,
-    temperature: 0.25,
-    messages: [{ role: "user", content: prompt }],
+    temperature: 0.2,
+    messages: [
+      { role: "system", content: systemMessage },
+      { role: "user", content: userPrompt },
+    ],
   });
 
   const text = response.choices[0]?.message?.content ?? "";

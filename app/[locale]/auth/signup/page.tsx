@@ -14,6 +14,7 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [terms, setTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,11 +25,16 @@ export default function SignupPage() {
       setError(locale === "ro" ? "Parola trebuie să aibă cel puțin 8 caractere." : "Password must be at least 8 characters.");
       return;
     }
+    if (!terms) {
+      setError(locale === "ro" ? "Trebuie să accepți termenii și condițiile." : "You must accept the terms and conditions.");
+      return;
+    }
     setLoading(true);
+    const normalizedEmail = email.toLowerCase();
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email: normalizedEmail, password }),
     });
     if (!res.ok) {
       const data = await res.json();
@@ -36,7 +42,7 @@ export default function SignupPage() {
       setLoading(false);
       return;
     }
-    await signIn("credentials", { email, password, redirect: false });
+    await signIn("credentials", { email: normalizedEmail, password, redirect: false });
     router.push(`/${locale}/tool`);
   }
 
@@ -85,7 +91,7 @@ export default function SignupPage() {
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("name")}</label>
               <div style={{ position: "relative" }}>
                 <User size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required autoComplete="name" style={{ paddingLeft: "36px" }} />
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required autoComplete="name" placeholder={locale === "ro" ? "Ion Popescu" : "John Doe"} style={{ paddingLeft: "36px" }} />
               </div>
             </div>
 
@@ -93,7 +99,7 @@ export default function SignupPage() {
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("email")}</label>
               <div style={{ position: "relative" }}>
                 <Mail size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" style={{ paddingLeft: "36px" }} />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="exemplu@email.com" style={{ paddingLeft: "36px" }} />
               </div>
             </div>
 
@@ -101,18 +107,37 @@ export default function SignupPage() {
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("password")}</label>
               <div style={{ position: "relative" }}>
                 <Lock size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" minLength={8} style={{ paddingLeft: "36px" }} />
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" minLength={8} placeholder="••••••••" style={{ paddingLeft: "36px" }} />
               </div>
               <p style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px" }}>
                 {locale === "ro" ? "Minimum 8 caractere" : "Minimum 8 characters"}
               </p>
             </div>
 
+            <label style={{ display: "flex", alignItems: "flex-start", gap: "10px", cursor: "pointer", marginTop: "4px" }}>
+              <input
+                type="checkbox"
+                checked={terms}
+                onChange={(e) => setTerms(e.target.checked)}
+                style={{ marginTop: "2px", accentColor: "var(--primary-light)", width: "16px", height: "16px", flexShrink: 0, cursor: "pointer" }}
+              />
+              <span style={{ fontSize: "12px", color: "var(--color-muted-foreground)", lineHeight: 1.5 }}>
+                {locale === "ro" ? "Am citit și accept " : "I have read and accept the "}
+                <Link href={`/${locale}/terms`} style={{ color: "var(--primary-light)", textDecoration: "none", fontWeight: 600 }}>
+                  {locale === "ro" ? "Termenii și Condițiile" : "Terms and Conditions"}
+                </Link>
+                {locale === "ro" ? " și " : " and "}
+                <Link href={`/${locale}/privacy`} style={{ color: "var(--primary-light)", textDecoration: "none", fontWeight: 600 }}>
+                  {locale === "ro" ? "Politica de Confidențialitate" : "Privacy Policy"}
+                </Link>
+              </span>
+            </label>
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !terms}
               className="btn-primary"
-              style={{ width: "100%", justifyContent: "center", padding: "13px", fontSize: "15px", marginTop: "4px", opacity: loading ? 0.7 : 1 }}
+              style={{ width: "100%", justifyContent: "center", padding: "13px", fontSize: "15px", marginTop: "4px", opacity: loading || !terms ? 0.6 : 1 }}
             >
               {loading ? "..." : t("signup_btn")}
             </button>

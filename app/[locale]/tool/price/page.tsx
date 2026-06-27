@@ -41,9 +41,16 @@ export default function PriceToolPage() {
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
   const [productType, setProductType] = useState<"" | "original" | "replica">("");
+  const [currency, setCurrency] = useState<"RON" | "EUR">("RON");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PriceEstimate | null>(null);
   const [error, setError] = useState("");
+
+  const EUR_RATE = 5.0;
+  function displayPrice(ron: number) {
+    if (currency === "EUR") return `€${Math.round(ron / EUR_RATE)}`;
+    return `RON ${ron}`;
+  }
 
   if (status === "loading") return null;
   if (!session) {
@@ -122,6 +129,19 @@ export default function PriceToolPage() {
           </p>
         </div>
 
+        {/* Currency toggle */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+          <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)", fontFamily: "Rubik, sans-serif" }}>
+            {isRo ? "Afișează în:" : "Show in:"}
+          </span>
+          {(["RON", "EUR"] as const).map((c) => (
+            <button key={c} type="button" onClick={() => setCurrency(c)}
+              style={{ padding: "5px 14px", borderRadius: "8px", border: `1px solid ${currency === c ? "rgba(212,153,26,0.5)" : "rgba(255,255,255,0.1)"}`, background: currency === c ? "rgba(212,153,26,0.12)" : "transparent", color: currency === c ? "var(--primary-light)" : "var(--color-muted-foreground)", fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>
+              {c}
+            </button>
+          ))}
+        </div>
+
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "32px" }}>
           <div>
             <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
@@ -196,9 +216,9 @@ export default function PriceToolPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: "12px" }}>
               {[
-                { label: isRo ? "Pret minim" : "Min price", value: `${result.currency} ${result.min}`, color: "#EF4444" },
-                { label: isRo ? "Pret recomandat" : "Suggested price", value: `${result.currency} ${result.suggestedPrice}`, color: "var(--primary-light)" },
-                { label: isRo ? "Pret maxim" : "Max price", value: `${result.currency} ${result.max}`, color: "#10B981" },
+                { label: isRo ? "Pret minim" : "Min price", value: displayPrice(result.min), color: "#EF4444" },
+                { label: isRo ? "Pret recomandat" : "Suggested price", value: displayPrice(result.suggestedPrice), color: "var(--primary-light)" },
+                { label: isRo ? "Pret maxim" : "Max price", value: displayPrice(result.max), color: "#10B981" },
               ].map(item => (
                 <div key={item.label} className="card" style={{ padding: "18px", textAlign: "center" }}>
                   <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>{item.label}</div>

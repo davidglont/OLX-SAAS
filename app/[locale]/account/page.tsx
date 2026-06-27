@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { User, Zap, ArrowRight, CheckCircle } from "lucide-react";
+import { User, Zap, ArrowRight, CheckCircle, Shield } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { PLANS, type PlanKey } from "@/lib/stripe";
@@ -52,10 +52,14 @@ export default function AccountPage() {
   }
 
   const currentPlan = (session?.user as { plan?: string })?.plan ?? "free";
+  const isAdmin = (session?.user as { role?: string })?.role === "admin";
   const planInfo = PLANS[currentPlan as PlanKey] ?? PLANS.free;
 
+  const PLAN_ORDER: Record<PlanKey, number> = { free: 0, pro: 1, proplus: 2, business: 3 };
+  const currentTier = PLAN_ORDER[currentPlan as PlanKey] ?? 0;
+
   const upgradePlans = (Object.entries(PLANS) as [PlanKey, typeof PLANS[PlanKey]][]).filter(
-    ([key]) => key !== "free" && key !== currentPlan
+    ([key]) => key !== "free" && PLAN_ORDER[key] > currentTier
   );
 
   return (
@@ -89,8 +93,16 @@ export default function AccountPage() {
               )}
             </div>
             <div>
-              <div style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "18px" }}>{session?.user?.name}</div>
-              <div style={{ fontSize: "14px", color: "var(--color-muted-foreground)" }}>{session?.user?.email}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "18px" }}>{session?.user?.name}</span>
+                {isAdmin && (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px", fontWeight: 700, padding: "2px 10px", borderRadius: "20px", background: "rgba(212,153,26,0.12)", border: "1px solid rgba(212,153,26,0.3)", color: "var(--primary-light)", fontFamily: "Rubik, sans-serif" }}>
+                    <Shield size={10} />
+                    Admin
+                  </span>
+                )}
+              </div>
+              <div style={{ fontSize: "14px", color: "var(--color-muted-foreground)", marginTop: "2px" }}>{session?.user?.email}</div>
             </div>
           </div>
         </div>

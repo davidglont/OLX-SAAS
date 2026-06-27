@@ -14,7 +14,8 @@ const schema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, password } = schema.parse(body);
+    const { name, password } = schema.parse(body);
+    const email = schema.parse(body).email.toLowerCase();
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const isAdmin = email === ADMIN_EMAIL.toLowerCase();
 
     await prisma.user.create({
       data: {

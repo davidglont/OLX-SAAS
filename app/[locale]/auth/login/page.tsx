@@ -20,7 +20,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const res = await signIn("credentials", { email, password, redirect: false });
+    const res = await signIn("credentials", { email: email.toLowerCase(), password, redirect: false });
     setLoading(false);
     if (res?.error) {
       setError(locale === "ro" ? "Email sau parolă incorectă." : "Incorrect email or password.");
@@ -63,7 +63,7 @@ export default function LoginPage() {
               </label>
               <div style={{ position: "relative" }}>
                 <Mail size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" style={{ paddingLeft: "36px" }} />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="exemplu@email.com" style={{ paddingLeft: "36px" }} />
               </div>
             </div>
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
               </div>
               <div style={{ position: "relative" }}>
                 <Lock size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" style={{ paddingLeft: "36px" }} />
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" placeholder="••••••••" style={{ paddingLeft: "36px" }} />
               </div>
             </div>
 
