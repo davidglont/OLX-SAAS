@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Check, Zap, Star } from "lucide-react";
+import { Check, Zap, Star, Shield } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -58,6 +58,9 @@ export default function PricingSection() {
   const { data: session } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
+  const [annual, setAnnual] = useState(false);
+
+  const displayPrice = (p: number) => annual ? Math.round(p * 0.8) : p;
   const sectionRef = useRef<HTMLElement>(null);
   const headRef    = useRef<HTMLDivElement>(null);
   const cardsRef   = useRef<(HTMLDivElement | null)[]>([]);
@@ -122,7 +125,7 @@ export default function PricingSection() {
       <div className="glow-orb" style={{ width: "700px", height: "400px", background: "radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%)", top: "50%", left: "50%", transform: "translate(-50%,-50%)", borderRadius: "50%" }} />
 
       <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }}>
-        <div ref={headRef} style={{ textAlign: "center", marginBottom: "72px" }}>
+        <div ref={headRef} style={{ textAlign: "center", marginBottom: "36px" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "5px 16px", borderRadius: "20px", background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)", marginBottom: "20px" }}>
             <Zap size={13} color="var(--primary-light)" fill="var(--primary-light)" />
             <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--primary-light)", fontFamily: "Rubik,sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
@@ -135,6 +138,28 @@ export default function PricingSection() {
           <p style={{ fontSize: "17px", color: "var(--color-muted-foreground)", maxWidth: "480px", margin: "0 auto" }}>
             {t("subtitle")}
           </p>
+        </div>
+
+        {/* Annual / Monthly toggle */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", marginBottom: "56px" }}>
+          <span style={{ fontSize: "14px", color: annual ? "var(--color-muted-foreground)" : "var(--color-foreground)", fontWeight: annual ? 400 : 600 }}>
+            {t("toggle_monthly")}
+          </span>
+          <button
+            onClick={() => setAnnual(a => !a)}
+            style={{ width: "48px", height: "26px", borderRadius: "13px", border: "none", cursor: "pointer", position: "relative", background: annual ? "var(--primary)" : "rgba(255,255,255,0.12)", transition: "background 0.25s ease", flexShrink: 0 }}
+            aria-label="Toggle annual billing"
+          >
+            <span style={{ position: "absolute", top: "3px", left: annual ? "25px" : "3px", width: "20px", height: "20px", borderRadius: "50%", background: "white", transition: "left 0.25s ease", boxShadow: "0 1px 4px rgba(0,0,0,0.35)" }} />
+          </button>
+          <span style={{ fontSize: "14px", color: annual ? "var(--color-foreground)" : "var(--color-muted-foreground)", fontWeight: annual ? 600 : 400, display: "flex", alignItems: "center", gap: "8px" }}>
+            {t("toggle_annual")}
+            {annual && (
+              <span style={{ fontSize: "11px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--primary-light)", background: "rgba(212,153,26,0.12)", border: "1px solid rgba(212,153,26,0.28)", borderRadius: "20px", padding: "2px 10px", letterSpacing: "0.04em" }}>
+                {t("save_badge")}
+              </span>
+            )}
+          </span>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", alignItems: "start" }}>
@@ -185,7 +210,7 @@ export default function PricingSection() {
               <div style={{ marginBottom: "24px" }}>
                 <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
                   <span style={{ fontFamily: "Rubik,sans-serif", fontSize: "clamp(36px,3vw,48px)", fontWeight: 800, color: plan.highlight ? "var(--primary-light)" : "var(--color-foreground)" }}>
-                    {"€"}{plan.price}
+                    {"€"}{displayPrice(plan.price)}
                   </span>
                   {plan.price > 0 && (
                     <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)" }}>/{t("monthly")}</span>
@@ -194,16 +219,30 @@ export default function PricingSection() {
                 {plan.price === 0 && (
                   <div style={{ fontSize: "12px", color: "var(--color-muted-foreground)", marginTop: "2px" }}>{t("forever_free")}</div>
                 )}
+                {annual && plan.price > 0 && (
+                  <div style={{ fontSize: "11px", color: "var(--primary-light)", marginTop: "4px", fontWeight: 600 }}>
+                    €{displayPrice(plan.price) * 12} {t("annual_note")}
+                  </div>
+                )}
               </div>
 
               <button
                 onClick={() => handleUpgrade(plan.key)}
                 disabled={loading === plan.key}
                 className={plan.highlight ? "btn-primary" : "btn-secondary"}
-                style={{ width: "100%", justifyContent: "center", marginBottom: "24px", padding: "12px", fontSize: "14px", opacity: loading === plan.key ? 0.7 : 1, cursor: loading === plan.key ? "not-allowed" : "pointer" }}
+                style={{ width: "100%", justifyContent: "center", marginBottom: plan.price > 0 ? "8px" : "24px", padding: "12px", fontSize: "14px", opacity: loading === plan.key ? 0.7 : 1, cursor: loading === plan.key ? "not-allowed" : "pointer" }}
               >
                 {loading === plan.key ? t("processing") : plan.price === 0 ? t("cta_free") : t("cta_paid")}
               </button>
+
+              {plan.price > 0 && (
+                <div style={{ textAlign: "center", marginBottom: "18px" }}>
+                  <span style={{ fontSize: "11px", color: "var(--color-muted-foreground)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    <Shield size={10} color="var(--color-muted-foreground)" />
+                    {t("guarantee")}
+                  </span>
+                </div>
+              )}
 
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>

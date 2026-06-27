@@ -15,14 +15,15 @@
     "tools_menu": "Instrumente"
   },
   "hero": {
-    "badge": "Nou · AI pentru vânzători",
+    "badge": "1.247 vânzători activi",
     "title": "Vinde de 3× mai repede pe OLX și Vinted",
     "subtitle": "Încarci pozele, AI-ul face magia — titlu, descriere și taguri optimizate în 10 secunde. Anunțurile tale vor ieși în evidență.",
-    "cta_primary": "Încearcă gratuit",
+    "cta_primary": "Încearcă gratuit — fără card",
     "cta_secondary": "Vezi cum funcționează",
     "trust": "Fără card de credit · Gratuit pentru totdeauna",
     "trust1": "Fără card de credit",
-    "trust2": "Gratuit pentru totdeauna"
+    "trust2": "Gratuit pentru totdeauna",
+    "trust3": "Garanție 14 zile"
   },
   "howItWorks": {
     "eyebrow": "Cum funcționează",
@@ -70,7 +71,17 @@
     "t2_location": "București",
     "t3_text": "Folosesc pentru toate produsele de pe Vinted. Economisesc timp și vând mai repede.",
     "t3_name": "Maria C.",
-    "t3_location": "Timișoara"
+    "t3_location": "Timișoara",
+    "t4_text": "Prima săptămână am vândut 3 produse deodată. Titlurile generate sunt incomparabil mai bune decât ce scriam eu.",
+    "t4_name": "Radu P.",
+    "t4_location": "Iași",
+    "t5_text": "Nu mai pierd ore scriind descrieri. 10 secunde și anunțul e gata, complet, profesional.",
+    "t5_name": "Elena V.",
+    "t5_location": "Brașov",
+    "t6_text": "De la 30 de vizualizări la 120 în prima zi după AnunțAI. Schimbă complet jocul pe OLX.",
+    "t6_name": "Mihai D.",
+    "t6_location": "Constanța",
+    "verified": "Verificat"
   },
   "pricing": {
     "eyebrow": "Prețuri",
@@ -101,7 +112,48 @@
     "feature_market_advanced": "Trend research avansat",
     "feature_price_opt": "Optimizare pret competitiv",
     "feature_best_days": "Zile optime de postare",
-    "feature_category_report": "Raport categorie detaliat"
+    "feature_category_report": "Raport categorie detaliat",
+    "toggle_monthly": "Lunar",
+    "toggle_annual": "Anual",
+    "save_badge": "Economisești 20%",
+    "annual_note": "facturat anual",
+    "guarantee": "14-zile garanție · Anulezi oricând",
+    "launch_price": "Preț de lansare"
+  },
+  "guarantee": {
+    "title": "Cumperi fără niciun risc",
+    "subtitle": "Nu ești mulțumit în primele 14 zile? Returnăm integral, fără întrebări.",
+    "money_back": "14-zile returnare bani",
+    "money_back_desc": "Returnăm integral, fără întrebări.",
+    "cancel": "Anulezi oricând",
+    "cancel_desc": "Fără penalizări sau costuri ascunse.",
+    "secure": "Plată 100% securizată",
+    "secure_desc": "Procesată prin Stripe, standardul global.",
+    "cta": "Începe fără risc",
+    "cta_sub": "Fără card de credit pentru planul gratuit"
+  },
+  "recommendations": {
+    "eyebrow": "Sfaturi de la experți",
+    "title": "Vinde mai mult cu aceste tactici",
+    "subtitle": "Strategii testate de vânzătorii de top pe OLX și Vinted",
+    "tip1_title": "Fotografia contează",
+    "tip1_desc": "Fundalul alb și lumina naturală cresc rata de click cu 47%. Pozele vorbesc mai tare decât cuvintele.",
+    "tip1_stat": "+47% vizualizări",
+    "tip2_title": "Titlul SEO",
+    "tip2_desc": "Pune brand-ul și modelul exact pe primul loc. Cumpărătorii caută specific — găsesc exact ce listezi tu.",
+    "tip2_stat": "3× mai găsit",
+    "tip3_title": "Prețul psihologic",
+    "tip3_desc": "499 RON vinde mai bine decât 500 RON. Cifrele rotunde par mai negociabile, psihologic.",
+    "tip3_stat": "+12% conversie",
+    "tip4_title": "Timing corect",
+    "tip4_desc": "Postează marți-joi între 18:00-21:00 — atunci cumpărătorii sunt cei mai activi pe platforme.",
+    "tip4_stat": "2× mai multe oferte",
+    "tip5_title": "Descriere onestă",
+    "tip5_desc": "Cumpărătorii revin la vânzătorii de încredere. Menționează orice defect — construiești reputație.",
+    "tip5_stat": "⭐ rating mai bun",
+    "tip6_title": "Taguri strategice",
+    "tip6_desc": "8-12 taguri mixate — brand + categorie + stare + model. Acoperă toate variantele de căutare.",
+    "tip6_stat": "+60% descoperire"
   },
   "tool": {
     "title": "Generează Anunțul Tău",

@@ -24,9 +24,15 @@ export default function SocialProof() {
     { text: t("t1_text"), name: t("t1_name"), location: t("t1_location") },
     { text: t("t2_text"), name: t("t2_name"), location: t("t2_location") },
     { text: t("t3_text"), name: t("t3_name"), location: t("t3_location") },
+    { text: t("t4_text"), name: t("t4_name"), location: t("t4_location") },
+    { text: t("t5_text"), name: t("t5_name"), location: t("t5_location") },
+    { text: t("t6_text"), name: t("t6_name"), location: t("t6_location") },
     { text: t("t1_text"), name: t("t1_name"), location: t("t1_location") },
     { text: t("t2_text"), name: t("t2_name"), location: t("t2_location") },
     { text: t("t3_text"), name: t("t3_name"), location: t("t3_location") },
+    { text: t("t4_text"), name: t("t4_name"), location: t("t4_location") },
+    { text: t("t5_text"), name: t("t5_name"), location: t("t5_location") },
+    { text: t("t6_text"), name: t("t6_name"), location: t("t6_location") },
   ];
 
   useEffect(() => {
@@ -103,11 +109,17 @@ export default function SocialProof() {
                   &ldquo;{item.text}&rdquo;
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#8B5CF6,#6D28D9)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#D4991A,#A67800)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <span style={{ color: "white", fontSize: "13px", fontWeight: 700, fontFamily: "Rubik,sans-serif" }}>{item.name[0]}</span>
                   </div>
                   <div>
-                    <div style={{ fontSize: "13px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>{item.name}</div>
+                    <div style={{ fontSize: "13px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)", display: "flex", alignItems: "center", gap: "6px" }}>
+                      {item.name}
+                      <span style={{ fontSize: "10px", color: "#22C55E", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                        <svg width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#22C55E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        {t("verified")}
+                      </span>
+                    </div>
                     <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)", display: "flex", alignItems: "center", gap: "3px" }}>
                       <MapPin size={10} />{item.location}
                     </div>

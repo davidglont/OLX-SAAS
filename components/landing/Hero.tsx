@@ -69,7 +69,8 @@ export default function Hero() {
               <Zap size={11} color="var(--primary-light)" fill="var(--primary-light)" />
               <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", fontFamily: "Rubik,sans-serif", letterSpacing: "0.06em" }}>AI</span>
             </div>
-            <span style={{ fontSize: "13px", fontWeight: 500, color: "var(--color-muted-foreground)" }}>{t("badge")}</span>
+            <span className="hero-live-dot" />
+            <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)" }}>{t("badge")}</span>
           </div>
 
           <h1
@@ -108,7 +109,7 @@ export default function Hero() {
               </div>
               <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)", fontWeight: 500 }}>4.9/5</span>
             </div>
-            {[t("trust1"), t("trust2")].map(item => (
+            {[t("trust1"), t("trust2"), t("trust3")].map(item => (
               <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <CheckCircle size={14} color="var(--success)" />
                 <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)" }}>{item}</span>
@@ -188,6 +189,15 @@ export default function Hero() {
         @media (max-width: 900px) {
           .hero-preview { display: none; }
           section > div { grid-template-columns: 1fr !important; }
+        }
+        .hero-live-dot {
+          width: 7px; height: 7px; border-radius: 50%;
+          background: #22C55E; flex-shrink: 0;
+          animation: hero-pulse 2.2s ease-in-out infinite;
+        }
+        @keyframes hero-pulse {
+          0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+          50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
         }
       `}</style>
     </section>

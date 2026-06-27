@@ -15,14 +15,15 @@
     "tools_menu": "Tools"
   },
   "hero": {
-    "badge": "New · AI for sellers",
+    "badge": "1,247 active sellers",
     "title": "Sell 3× faster on OLX and Vinted",
     "subtitle": "Upload your photos, AI does the magic — optimized title, description and tags in 10 seconds. Your listings will stand out.",
-    "cta_primary": "Try for free",
+    "cta_primary": "Try for free — no card",
     "cta_secondary": "See how it works",
     "trust": "No credit card · Free forever",
     "trust1": "No credit card",
-    "trust2": "Free forever"
+    "trust2": "Free forever",
+    "trust3": "14-day guarantee"
   },
   "howItWorks": {
     "eyebrow": "How it works",
@@ -70,7 +71,17 @@
     "t2_location": "Bucharest",
     "t3_text": "I use it for all products on Vinted. Saves time and I sell faster.",
     "t3_name": "Maria C.",
-    "t3_location": "Timisoara"
+    "t3_location": "Timisoara",
+    "t4_text": "Sold 3 products in my first week. The generated titles are incomparably better than what I wrote.",
+    "t4_name": "Radu P.",
+    "t4_location": "Iași",
+    "t5_text": "No more hours writing descriptions. 10 seconds and the listing is ready, complete, professional.",
+    "t5_name": "Elena V.",
+    "t5_location": "Brașov",
+    "t6_text": "From 30 views to 120 on the first day after AnuntAI. Completely changes the game on OLX.",
+    "t6_name": "Mihai D.",
+    "t6_location": "Constanța",
+    "verified": "Verified"
   },
   "pricing": {
     "eyebrow": "Pricing",
@@ -101,7 +112,48 @@
     "feature_market_advanced": "Advanced trend research",
     "feature_price_opt": "Competitive price optimization",
     "feature_best_days": "Optimal posting days",
-    "feature_category_report": "Detailed category report"
+    "feature_category_report": "Detailed category report",
+    "toggle_monthly": "Monthly",
+    "toggle_annual": "Annual",
+    "save_badge": "Save 20%",
+    "annual_note": "billed annually",
+    "guarantee": "14-day guarantee · Cancel anytime",
+    "launch_price": "Launch price"
+  },
+  "guarantee": {
+    "title": "Buy with zero risk",
+    "subtitle": "Not happy in the first 14 days? We refund in full, no questions asked.",
+    "money_back": "14-day money back",
+    "money_back_desc": "Full refund, no questions asked.",
+    "cancel": "Cancel anytime",
+    "cancel_desc": "No penalties or hidden fees.",
+    "secure": "100% secure payment",
+    "secure_desc": "Processed via Stripe, the global standard.",
+    "cta": "Start risk-free",
+    "cta_sub": "No credit card required for free plan"
+  },
+  "recommendations": {
+    "eyebrow": "Expert tips",
+    "title": "Sell more with these tactics",
+    "subtitle": "Tested strategies from top sellers on OLX and Vinted",
+    "tip1_title": "Photography matters",
+    "tip1_desc": "White background and natural light increase click rate by 47%. Photos speak louder than words.",
+    "tip1_stat": "+47% views",
+    "tip2_title": "SEO title",
+    "tip2_desc": "Put the brand and exact model first. Buyers search specifically — they find exactly what you list.",
+    "tip2_stat": "3× more findable",
+    "tip3_title": "Psychological pricing",
+    "tip3_desc": "499 RON sells better than 500 RON. Round numbers seem more negotiable, psychologically.",
+    "tip3_stat": "+12% conversion",
+    "tip4_title": "Right timing",
+    "tip4_desc": "Post Tuesday-Thursday between 6-9PM — that's when buyers are most active on platforms.",
+    "tip4_stat": "2× more offers",
+    "tip5_title": "Honest description",
+    "tip5_desc": "Buyers return to trusted sellers. Mention any defects — you're building your reputation.",
+    "tip5_stat": "⭐ better rating",
+    "tip6_title": "Strategic tags",
+    "tip6_desc": "8-12 mixed tags — brand + category + condition + model. Cover all search variations.",
+    "tip6_stat": "+60% discovery"
   },
   "tool": {
     "title": "Generate Your Listing",
