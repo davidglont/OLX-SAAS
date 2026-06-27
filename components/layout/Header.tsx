@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Zap, Menu, X, ChevronDown, LogOut, LayoutDashboard, User, Shield, DollarSign, Type, BarChart2, Wrench, Settings } from "lucide-react";
+import { Zap, Menu, X, ChevronDown, LogOut, LayoutDashboard, User, Shield, DollarSign, Type, BarChart2, Wrench, Settings, Info, HelpCircle, Mail, BookOpen } from "lucide-react";
 import gsap from "gsap";
 
 export default function Header() {
@@ -17,11 +17,19 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [companyOpen, setCompanyOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   const otherLocale = locale === "ro" ? "en" : "ro";
   const switchedPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
+
+  const companyLinks = [
+    { href: `/${locale}/about`, label: locale === "ro" ? "Despre noi" : "About", icon: Info, color: "#60A5FA" },
+    { href: `/${locale}/case-studies`, label: locale === "ro" ? "Studii de caz" : "Case Studies", icon: BookOpen, color: "#34D399" },
+    { href: `/${locale}/faq`, label: "FAQ", icon: HelpCircle, color: "#F59E0B" },
+    { href: `/${locale}/contact`, label: "Contact", icon: Mail, color: "#EC4899" },
+  ];
 
   const toolLinks = [
     { href: `/${locale}/tool`, label: t("tool"), icon: Zap, color: "var(--primary-light)" },
@@ -164,6 +172,55 @@ export default function Header() {
           >
             {t("pricing")}
           </Link>
+
+          {/* Company dropdown */}
+          <div style={{ position: "relative" }}>
+            <button
+              onClick={() => setCompanyOpen(!companyOpen)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                padding: "7px 14px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: 500,
+                fontFamily: "Rubik, sans-serif",
+                color: "var(--color-muted-foreground)",
+                background: "transparent",
+                border: "1px solid transparent",
+                cursor: "pointer",
+                transition: "color 0.2s, background 0.2s",
+              }}
+            >
+              {locale === "ro" ? "Companie" : "Company"}
+              <ChevronDown size={12} style={{ transition: "transform 0.2s", transform: companyOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
+            </button>
+
+            {companyOpen && (
+              <div onClick={() => setCompanyOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 800 }} />
+            )}
+            {companyOpen && (
+              <div style={{ position: "absolute", left: 0, top: "calc(100% + 10px)", background: "var(--surface-2)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "14px", minWidth: "200px", overflow: "hidden", zIndex: 900, boxShadow: "0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1)" }}>
+                {companyLinks.map((cl) => {
+                  const CIcon = cl.icon;
+                  return (
+                    <Link
+                      key={cl.href}
+                      href={cl.href}
+                      onClick={() => setCompanyOpen(false)}
+                      style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 16px", fontSize: "13px", fontWeight: 500, color: "var(--color-muted-foreground)", textDecoration: "none", transition: "background 0.15s", borderBottom: "1px solid rgba(139,92,246,0.07)" }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "26px", height: "26px", borderRadius: "7px", background: `${cl.color}15`, flexShrink: 0 }}>
+                        <CIcon size={13} color={cl.color} />
+                      </span>
+                      {cl.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Right side */}
@@ -277,6 +334,11 @@ export default function Header() {
           <Link href={`/${locale}/pricing`} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "12px 0", fontSize: "16px", fontWeight: 500, fontFamily: "Rubik, sans-serif", color: pathname === `/${locale}/pricing` ? "var(--primary-light)" : "var(--color-foreground)", textDecoration: "none", borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
             {t("pricing")}
           </Link>
+          {companyLinks.map((cl) => (
+            <Link key={cl.href} href={cl.href} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "12px 0 12px 16px", fontSize: "15px", fontWeight: 500, fontFamily: "Rubik, sans-serif", color: "var(--color-muted-foreground)", textDecoration: "none", borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
+              {cl.label}
+            </Link>
+          ))}
           {!session && (
             <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
               <Link href={`/${locale}/auth/login`} className="btn-secondary" style={{ flex: 1, justifyContent: "center", padding: "11px" }}>
