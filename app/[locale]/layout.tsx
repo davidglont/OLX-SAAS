@@ -59,8 +59,40 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
 
+  const isRo = locale === "ro";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "AnunțAI",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: `https://anuntai.ro/${locale}`,
+    description: isRo
+      ? "Optimizează-ți anunțurile pe OLX și Vinted cu AI. Titlu, descriere și taguri perfecte în 10 secunde."
+      : "Optimize your OLX and Vinted listings with AI. Perfect title, description and tags in 10 seconds.",
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "EUR",
+      lowPrice: "0",
+      highPrice: "30",
+      offerCount: "4",
+    },
+    inLanguage: isRo ? "ro" : "en",
+    publisher: {
+      "@type": "Organization",
+      name: "AnunțAI",
+      url: "https://anuntai.ro",
+    },
+  };
+
   return (
     <html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body>
         <Providers>
           <NextIntlClientProvider messages={messages}>

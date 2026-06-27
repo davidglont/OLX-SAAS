@@ -63,6 +63,23 @@ export default function Footer() {
 
             <div>
               <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
+                {locale === "ro" ? "Companie" : "Company"}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {[
+                  { href: `/${locale}/about`, label: locale === "ro" ? "Despre noi" : "About" },
+                  { href: `/${locale}/faq`, label: "FAQ" },
+                  { href: `/${locale}/contact`, label: "Contact" },
+                ].map(link => (
+                  <Link key={link.href} href={link.href} style={{ fontSize: "13px", color: "var(--color-muted-foreground)", textDecoration: "none", transition: "color 0.2s" }}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
                 Legal
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
