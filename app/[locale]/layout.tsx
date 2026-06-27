@@ -34,11 +34,21 @@ export async function generateMetadata({
       type: "website",
       locale: isRo ? "ro_RO" : "en_US",
       siteName: "AnunțAI",
+      url: `https://anuntai.ro/${locale}`,
+      images: [{ url: "https://anuntai.ro/og-image.png", width: 1200, height: 630, alt: "AnunțAI" }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: ["https://anuntai.ro/og-image.png"],
+    },
+    alternates: {
+      canonical: `https://anuntai.ro/${locale}`,
+      languages: {
+        "ro": "https://anuntai.ro/ro",
+        "en": "https://anuntai.ro/en",
+      },
     },
     robots: {
       index: true,
