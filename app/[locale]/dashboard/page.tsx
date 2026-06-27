@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Trash2, Plus, Tag, Calendar, ShoppingBag } from "lucide-react";
+import { LayoutDashboard, Trash2, Plus, Tag, Calendar, ShoppingBag, Crown, Check, ArrowRight } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -54,6 +54,17 @@ export default function DashboardPage() {
     setDeleting(null);
   }
 
+  const plan = (session?.user as { plan?: string } | null)?.plan ?? "free";
+
+  const PLAN_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; features: string[]; nextPlan: string | null }> = {
+    free:     { label: "Free",     color: "#9CA3AF", bg: "rgba(156,163,175,0.07)", border: "rgba(156,163,175,0.15)", features: ["1 analiză / zi", "Tool principal AI", "Salvare anunțuri"], nextPlan: "pro" },
+    pro:      { label: "Pro",      color: "#60A5FA", bg: "rgba(96,165,250,0.07)",  border: "rgba(96,165,250,0.15)",  features: ["3 analize / zi", "Estimator Preț", "Generator Titluri A/B", "Checker Listing"], nextPlan: "proplus" },
+    proplus:  { label: "Pro+",     color: "var(--primary-light)", bg: "rgba(212,153,26,0.07)", border: "rgba(212,153,26,0.2)", features: ["5 analize / zi", "Toate toolurile", "Analiză de piață AI", "Zile optime de postare"], nextPlan: "business" },
+    business: { label: "Business", color: "#A78BFA", bg: "rgba(167,139,250,0.07)", border: "rgba(167,139,250,0.15)", features: ["15 analize / zi", "Toate toolurile", "Analiză avansată de piață", "Suport prioritar"], nextPlan: null },
+  };
+
+  const planCfg = PLAN_CONFIG[plan] ?? PLAN_CONFIG.free;
+
   if (status === "loading" || loading) {
     return (
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
@@ -84,6 +95,36 @@ export default function DashboardPage() {
             <Plus size={16} />
             {t("empty_cta")}
           </Link>
+        </div>
+
+        {/* Plan card */}
+        <div className="card" style={{ padding: "20px 24px", marginBottom: "16px", background: planCfg.bg, border: `1px solid ${planCfg.border}` }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: planCfg.bg, border: `1px solid ${planCfg.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Crown size={16} color={planCfg.color} />
+              </div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                  <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "15px", color: "var(--color-foreground)" }}>Plan curent</span>
+                  <span style={{ fontSize: "11px", fontWeight: 700, padding: "2px 10px", borderRadius: "20px", background: planCfg.border, color: planCfg.color, fontFamily: "Rubik, sans-serif" }}>{planCfg.label}</span>
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+                  {planCfg.features.map((f) => (
+                    <span key={f} style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "var(--color-muted-foreground)" }}>
+                      <Check size={11} color={planCfg.color} />
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {planCfg.nextPlan && (
+              <Link href={`/${locale}/pricing`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "13px", fontWeight: 700, fontFamily: "Rubik, sans-serif", color: planCfg.color, background: planCfg.bg, border: `1px solid ${planCfg.border}`, padding: "8px 16px", borderRadius: "10px", textDecoration: "none", whiteSpace: "nowrap" }}>
+                Upgrade <ArrowRight size={13} />
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* Usage bar */}

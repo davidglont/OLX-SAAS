@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { DollarSign, Loader2, TrendingUp, ChevronRight } from "lucide-react";
+import { DollarSign, Loader2, TrendingUp, ChevronRight, Lock, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import type { PriceEstimate } from "@/lib/ai";
@@ -39,6 +40,7 @@ export default function PriceToolPage() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
+  const [productType, setProductType] = useState<"" | "original" | "replica">("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PriceEstimate | null>(null);
   const [error, setError] = useState("");
@@ -47,6 +49,36 @@ export default function PriceToolPage() {
   if (!session) {
     router.push(`/${locale}/auth/login`);
     return null;
+  }
+
+  const userPlan = (session.user as { plan?: string })?.plan ?? "free";
+  const isLocked = userPlan === "free";
+
+  if (isLocked) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
+        <Header />
+        <main style={{ flex: 1, maxWidth: "720px", margin: "0 auto", padding: "100px 28px 80px", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="card" style={{ padding: "48px 36px", textAlign: "center", maxWidth: "480px", width: "100%" }}>
+            <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+              <Lock size={24} color="var(--primary-light)" />
+            </div>
+            <h2 style={{ fontFamily: "Rubik, sans-serif", fontWeight: 800, fontSize: "22px", color: "var(--color-foreground)", marginBottom: "10px" }}>
+              {isRo ? "Tool disponibil din plan Pro" : "Tool available from Pro plan"}
+            </h2>
+            <p style={{ fontSize: "14px", color: "var(--color-muted-foreground)", lineHeight: 1.7, marginBottom: "28px" }}>
+              {isRo
+                ? "Estimatorul de preț cu calibrare pentru originale, replici și second-hand este disponibil pentru utilizatorii Pro și superior."
+                : "The price estimator with calibration for originals, replicas and second-hand is available for Pro and above users."}
+            </p>
+            <Link href={`/${locale}/pricing`} className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 28px", fontSize: "15px", justifyContent: "center" }}>
+              {isRo ? "Vezi planurile" : "See plans"} <ArrowRight size={16} />
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -59,7 +91,7 @@ export default function PriceToolPage() {
       const res = await fetch("/api/tools/price", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: fullDesc, language: locale }),
+        body: JSON.stringify({ description: fullDesc, language: locale, productType: productType || undefined }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Eroare"); return; }
@@ -110,16 +142,12 @@ export default function PriceToolPage() {
             <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px", textAlign: "right" }}>{description.length}/500</div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "14px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "14px" }}>
             <div>
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
                 {isRo ? "Categorie" : "Category"}
               </label>
-              <select
-                value={category}
-                onChange={e => setCategory(e.target.value)}
-                style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}
-              >
+              <select value={category} onChange={e => setCategory(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}>
                 <option value="">{isRo ? "Selecteaza..." : "Select..."}</option>
                 {categories.map(c => <option key={c.ro} value={isRo ? c.ro : c.en}>{isRo ? c.ro : c.en}</option>)}
               </select>
@@ -128,13 +156,19 @@ export default function PriceToolPage() {
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
                 {isRo ? "Stare" : "Condition"}
               </label>
-              <select
-                value={condition}
-                onChange={e => setCondition(e.target.value)}
-                style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}
-              >
+              <select value={condition} onChange={e => setCondition(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}>
                 <option value="">{isRo ? "Selecteaza..." : "Select..."}</option>
                 {conditions.map(c => <option key={c.ro} value={isRo ? c.ro : c.en}>{isRo ? c.ro : c.en}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
+                {isRo ? "Tip produs" : "Product type"}
+              </label>
+              <select value={productType} onChange={e => setProductType(e.target.value as "" | "original" | "replica")} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}>
+                <option value="">{isRo ? "Necunoscut" : "Unknown"}</option>
+                <option value="original">{isRo ? "Original / Autentic" : "Original / Authentic"}</option>
+                <option value="replica">{isRo ? "Replica / Rep" : "Replica / Rep"}</option>
               </select>
             </div>
           </div>

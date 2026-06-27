@@ -16,6 +16,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Autentificare necesara" }, { status: 401 });
   }
 
+  const { prisma } = await import("@/lib/db");
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true, role: true } });
+  const plan = user?.plan ?? "free";
+  if (plan === "free" && user?.role !== "admin") {
+    return NextResponse.json({ error: "Necesita plan Pro sau superior", code: "PLAN_REQUIRED" }, { status: 403 });
+  }
+
   let body: { title?: string; description?: string; platform?: string; language?: string };
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Date invalide" }, { status: 400 }); }
 

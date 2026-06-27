@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Type, Loader2, Copy, Check, Wand2 } from "lucide-react";
+import { Type, Loader2, Copy, Check, Wand2, Lock, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import type { TitleVariant } from "@/lib/ai";
@@ -27,6 +28,32 @@ export default function TitlesToolPage() {
 
   if (status === "loading") return null;
   if (!session) { router.push(`/${locale}/auth/login`); return null; }
+
+  const userPlan = (session.user as { plan?: string })?.plan ?? "free";
+  if (userPlan === "free") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
+        <Header />
+        <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
+          <div className="card" style={{ padding: "48px 36px", textAlign: "center", maxWidth: "480px", width: "100%" }}>
+            <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+              <Lock size={24} color="var(--primary-light)" />
+            </div>
+            <h2 style={{ fontFamily: "Rubik, sans-serif", fontWeight: 800, fontSize: "22px", color: "var(--color-foreground)", marginBottom: "10px" }}>
+              {isRo ? "Tool disponibil din plan Pro" : "Tool available from Pro plan"}
+            </h2>
+            <p style={{ fontSize: "14px", color: "var(--color-muted-foreground)", lineHeight: 1.7, marginBottom: "28px" }}>
+              {isRo ? "Generatorul de titluri A/B este disponibil pentru utilizatorii Pro și superior." : "The A/B title generator is available for Pro and above users."}
+            </p>
+            <Link href={`/${locale}/pricing`} className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 28px", fontSize: "15px", justifyContent: "center" }}>
+              {isRo ? "Vezi planurile" : "See plans"} <ArrowRight size={16} />
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   async function handleCopy(text: string, idx: number) {
     await navigator.clipboard.writeText(text);

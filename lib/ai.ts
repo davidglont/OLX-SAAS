@@ -1,9 +1,13 @@
 import Groq from "groq-sdk";
 
-const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
 const VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
 const TEXT_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
+
+function getClient(): Groq {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error("GROQ_API_KEY nu este setat in variabilele de mediu.");
+  return new Groq({ apiKey });
+}
 
 export interface PhotoScore {
   index: number;
@@ -188,7 +192,7 @@ OUTPUT - returneaza EXCLUSIV JSON valid, fara text inainte sau dupa:
   }
 }`;
 
-  const response = await client.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: VISION_MODEL,
     max_tokens: 3000,
     temperature: 0.3,
@@ -212,12 +216,26 @@ OUTPUT - returneaza EXCLUSIV JSON valid, fara text inainte sau dupa:
 
 export async function estimatePrice(
   description: string,
-  language: "ro" | "en"
+  language: "ro" | "en",
+  productType?: "original" | "replica"
 ): Promise<PriceEstimate> {
   const isRo = language === "ro";
+
+  const productTypeBlock = productType === "replica"
+    ? (isRo
+      ? `TIP PRODUS: REPLICA / REP\n- Pretul unei replici este 5-20% din pretul originalului\n- Replica Louis Vuitton portofel=80-200 RON | Replica geanta brand=100-300 RON | Replica ceas luxury=50-250 RON\n- NU estima ca original - pretul trebuie sa reflecte ca este replica\n- Mentioneaza in justificare ca este replica`
+      : `PRODUCT TYPE: REPLICA\n- Replica price is 5-20% of the original price\n- Price accordingly as a replica/rep item`)
+    : productType === "original"
+    ? (isRo
+      ? `TIP PRODUS: ORIGINAL / AUTENTIC\n- Estimeaza ca produs original autentic\n- Verifica autenticitatea prin descriere si calibreaza pretul original`
+      : `PRODUCT TYPE: AUTHENTIC ORIGINAL\n- Estimate as authentic original product`)
+    : "";
+
   const prompt = isRo
     ? `Esti expert in preturi pe piata second-hand din Romania (OLX, Vinted, Facebook Marketplace).
 Analizeaza produsul descris si estimeaza pretul real de vanzare in RON.
+
+${productTypeBlock}
 
 CALIBRARE PIATA ROMANEASCA 2025 (foloseste ca referinta obligatorie):
 Telefoane (second-hand bun): iPhone 16 Pro Max=5500-6500 RON | iPhone 15 Pro Max=4200-5000 RON | iPhone 14 Pro=3000-3800 RON | iPhone 13=1800-2500 RON | Samsung S25 Ultra=4500-5500 RON | Samsung S24=2500-3200 RON | Pixel 9 Pro=3000-3800 RON
@@ -226,6 +244,8 @@ Laptopuri second: MacBook Air M2=4000-5500 RON | MacBook Pro M3=7000-10000 RON |
 Console: PS5 nou=2200-2500 RON | PS5 second=1700-2100 RON | Xbox Series X=2000-2400 RON | Nintendo Switch=1400-1800 RON
 Electronice: AirPods Pro 2=700-1000 RON | iPad Air=2000-3000 RON | Apple Watch S9=1500-2200 RON
 Imbracaminte brand (second): Nike/Adidas sneakers=100-400 RON | Geaca brand=150-500 RON | Ceas second mid=300-800 RON
+Genti/portofele replica brand: Louis Vuitton replica=80-250 RON | Gucci replica=100-300 RON | Chanel replica=150-400 RON
+Genti/portofele original autentic: Louis Vuitton second=1500-4000 RON | Gucci second=1200-3500 RON
 
 REGULI CRITICE:
 - Pretul second-hand este 50-70% din pretul nou pentru electronice
@@ -267,7 +287,7 @@ Return ONLY valid JSON:
   ]
 }`;
 
-  const response = await client.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: TEXT_MODEL,
     max_tokens: 800,
     temperature: 0.25,
@@ -343,7 +363,7 @@ Return ONLY valid JSON (array with exactly 3 objects):
   }
 ]`;
 
-  const response = await client.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: TEXT_MODEL,
     max_tokens: 700,
     temperature: 0.5,
@@ -418,7 +438,7 @@ Return ONLY valid JSON:
   ]
 }`;
 
-  const response = await client.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: TEXT_MODEL,
     max_tokens: 900,
     temperature: 0.2,
