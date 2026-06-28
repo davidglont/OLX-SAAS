@@ -35,7 +35,7 @@ export default function UrgencyBanner() {
 
         <div style={{ display: "flex", justifyContent: "center", gap: "clamp(20px,4vw,48px)", flexWrap: "wrap", marginBottom: "40px" }}>
           {items.map(({ Icon, title, desc }) => (
-            <div key={title} style={{ display: "flex", alignItems: "flex-start", gap: "14px", maxWidth: "230px" }}>
+            <div key={title} className="urgency-item" style={{ display: "flex", alignItems: "flex-start", gap: "14px", maxWidth: "230px" }}>
               <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.22)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <Icon size={18} color="var(--primary-light)" />
               </div>

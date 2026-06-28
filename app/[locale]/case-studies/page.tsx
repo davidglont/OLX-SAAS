@@ -190,7 +190,7 @@ export default async function CaseStudiesPage({ params }: { params: Promise<{ lo
 
         <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
           {cases.map((c, i) => (
-            <div key={i} className="card" style={{ padding: "36px", position: "relative", overflow: "hidden" }}>
+            <div key={i} className="card cs-card" style={{ padding: "36px", position: "relative", overflow: "hidden" }}>
               {/* Accent bar */}
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg, ${c.color} 0%, transparent 100%)` }} />
 
@@ -214,12 +214,14 @@ export default async function CaseStudiesPage({ params }: { params: Promise<{ lo
               </div>
 
               {/* Before / After */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "12px", alignItems: "center", marginBottom: "24px" }}>
+              <div className="cs-ba-grid" style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "12px", alignItems: "center", marginBottom: "24px" }}>
                 <div style={{ padding: "16px", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: "10px" }}>
                   <div style={{ fontSize: "10px", fontWeight: 700, color: "#ef4444", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "6px" }}>{isRo ? "Înainte" : "Before"}</div>
                   <div style={{ fontSize: "13px", color: "var(--color-foreground)", lineHeight: 1.4 }}>{c.before}</div>
                 </div>
-                <ArrowRight size={16} color="var(--color-muted-foreground)" style={{ flexShrink: 0 }} />
+                <span className="cs-ba-arrow" style={{ display: "flex", justifyContent: "center" }}>
+                  <ArrowRight size={16} color="var(--color-muted-foreground)" />
+                </span>
                 <div style={{ padding: "16px", background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.15)", borderRadius: "10px" }}>
                   <div style={{ fontSize: "10px", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "6px" }}>{isRo ? "După" : "After"}</div>
                   <div style={{ fontSize: "13px", color: "var(--color-foreground)", lineHeight: 1.4 }}>{c.after}</div>

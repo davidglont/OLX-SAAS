@@ -110,7 +110,7 @@ export default function PriceToolPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
       <Header />
-      <main style={{ flex: 1, maxWidth: "720px", margin: "0 auto", padding: "100px 28px 80px", width: "100%" }}>
+      <main className="tool-main" style={{ flex: 1, maxWidth: "720px", margin: "0 auto", padding: "100px 28px 80px", width: "100%" }}>
 
         <div style={{ marginBottom: "36px" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "4px 14px", borderRadius: "20px", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.2)", marginBottom: "16px" }}>

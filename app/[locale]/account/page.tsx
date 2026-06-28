@@ -142,7 +142,7 @@ export default function AccountPage() {
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {upgradePlans.map(([key, plan]) => (
-                <div key={key} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderRadius: "12px", border: "1.5px solid var(--color-border)", gap: "12px" }}>
+                <div key={key} className="plan-upgrade-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderRadius: "12px", border: "1.5px solid var(--color-border)", gap: "12px" }}>
                   <div>
                     <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 600, fontSize: "15px" }}>{plan.name}</span>
                     <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)", marginLeft: "10px" }}>

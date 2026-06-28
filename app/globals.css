@@ -319,10 +319,29 @@ select option { background: var(--surface); color: var(--color-foreground); }
 
   /* Announcement bar simplification */
   .ann-hide-mobile { display: none !important; }
+
+  /* Case-studies before/after grid → collapse vertical */
+  .cs-ba-grid { grid-template-columns: 1fr !important; }
+  .cs-ba-arrow { transform: rotate(90deg); display: flex !important; justify-content: center; }
+
+  /* Urgency guarantee items full width */
+  .urgency-item { max-width: 100% !important; width: 100%; }
+
+  /* Tool pages side padding reduction */
+  .tool-main { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Account / dashboard inner rows that can wrap */
+  .plan-upgrade-row { flex-wrap: wrap !important; }
+  .plan-upgrade-row > div { min-width: 0; flex: 1; }
+
+  /* Case-studies card padding */
+  .cs-card { padding: 24px 16px !important; }
 }
 
 @media (max-width: 480px) {
   .lp-section  { padding: 48px 14px !important; }
   .hero-inner  { padding: 32px 14px 48px !important; }
   .auth-card   { padding: 24px 14px !important; }
+  .tool-main   { padding-top: 88px !important; }
+  .cs-card     { padding: 20px 14px !important; }
 }

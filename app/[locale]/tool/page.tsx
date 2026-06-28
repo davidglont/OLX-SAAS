@@ -134,7 +134,7 @@ export default function ToolPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
       <Header />
-      <main style={{ flex: 1, maxWidth: "900px", margin: "0 auto", width: "100%", padding: "80px 20px 60px" }}>
+      <main className="tool-main" style={{ flex: 1, maxWidth: "900px", margin: "0 auto", width: "100%", padding: "80px 20px 60px" }}>
         <div style={{ marginBottom: "36px" }}>
           <h1 style={{ fontFamily: "Rubik, sans-serif", fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: "8px" }}>
             {t("title")}
