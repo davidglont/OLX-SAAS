@@ -1,6 +1,5 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import BeforeAfter from "@/components/landing/BeforeAfter";
@@ -12,7 +11,6 @@ import PricingSection from "@/components/landing/PricingSection";
 export default function LandingPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
-      <AnnouncementBar />
       <Header />
       <main style={{ flex: 1 }}>
         <Hero />

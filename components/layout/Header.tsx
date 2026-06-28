@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Zap, Menu, X, ChevronDown, LogOut, LayoutDashboard, User, Shield, DollarSign, Type, BarChart2, Wrench, Settings, Info, HelpCircle, Mail, BookOpen } from "lucide-react";
 import gsap from "gsap";
+import AnnouncementBar from "@/components/landing/AnnouncementBar";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -19,7 +20,8 @@ export default function Header() {
   const [toolsOpen, setToolsOpen] = useState(false);
   const [companyOpen, setCompanyOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const headerRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const isLandingPage = pathname === `/${locale}`;
 
   const otherLocale = locale === "ro" ? "en" : "ro";
   const switchedPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
@@ -60,21 +62,17 @@ export default function Header() {
   const isToolActive = pathname.startsWith(`/${locale}/tool`);
 
   return (
-    <header
-      ref={headerRef}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 900,
-        background: scrolled ? "rgba(6,6,16,0.82)" : "transparent",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(139,92,246,0.15)" : "1px solid transparent",
-        transition: "background 0.4s, backdrop-filter 0.4s, border-color 0.4s",
-      }}
-    >
+    <div ref={headerRef} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 900 }}>
+      {isLandingPage && <AnnouncementBar />}
+      <header
+        style={{
+          background: scrolled ? "rgba(6,6,16,0.82)" : "transparent",
+          backdropFilter: scrolled ? "blur(20px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+          borderBottom: scrolled ? "1px solid rgba(139,92,246,0.15)" : "1px solid transparent",
+          transition: "background 0.4s, backdrop-filter 0.4s, border-color 0.4s",
+        }}
+      >
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 28px", height: "68px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
         {/* Logo */}
@@ -390,6 +388,7 @@ export default function Header() {
           .show-mobile { display: flex !important; }
         }
       `}</style>
-    </header>
+      </header>
+    </div>
   );
 }
