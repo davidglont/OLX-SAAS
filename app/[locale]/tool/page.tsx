@@ -90,15 +90,21 @@ export default function ToolPage() {
         body: JSON.stringify({ images, description, platform, language, vintedType: showVintedType ? vintedType : undefined }),
       });
 
-      const data = await res.json();
+      let data: Record<string, unknown>;
+      try {
+        data = await res.json();
+      } catch {
+        setError("Serverul nu a putut fi contactat. Incearca din nou.");
+        return;
+      }
 
       if (res.status === 403 && data.code === "LIMIT_REACHED") { setLimitReached(true); return; }
-      if (!res.ok) { setError(data.error ?? t("error")); return; }
+      if (!res.ok) { setError((data.error as string) ?? t("error")); return; }
 
       setResult(data as AnalysisResult);
       setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
     } catch {
-      setError("Eroare de conexiune. Incearca din nou.");
+      setError("Eroare de retea. Verifica conexiunea si incearca din nou.");
     } finally {
       setLoading(false);
     }
