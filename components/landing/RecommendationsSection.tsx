@@ -46,7 +46,7 @@ export default function RecommendationsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
+    <section ref={sectionRef} className="lp-section" style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "600px", height: "1px", background: "linear-gradient(to right, transparent, rgba(212,153,26,0.35), transparent)" }} />
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>

@@ -289,3 +289,40 @@ select option { background: var(--surface); color: var(--color-foreground); }
 /* ─── Hero word animation (GSAP target) ───────────────────── */
 .word-split { display: inline-block; overflow: hidden; vertical-align: bottom; }
 .word-split span { display: inline-block; will-change: transform; }
+
+/* ─── Mobile Responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Header */
+  .header-auth-desktop { display: none !important; }
+
+  /* Landing section padding */
+  .lp-section { padding: 64px 16px !important; }
+  .lp-urgency  { padding: 0 16px 64px !important; }
+
+  /* Hero inner grid */
+  .hero-inner { padding: 40px 16px 60px !important; }
+
+  /* Footer */
+  .footer-top-grid   { grid-template-columns: 1fr !important; }
+  .footer-links-row  { flex-direction: column !important; gap: 24px !important; }
+
+  /* BeforeAfter comparison */
+  .ba-grid            { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .ba-arrow-icon      { display: flex; justify-content: center; }
+  .ba-arrow-icon > div { transform: rotate(90deg); }
+
+  /* Social proof stats */
+  .stats-3col { grid-template-columns: 1fr !important; max-width: 100% !important; }
+
+  /* Auth pages */
+  .auth-card { padding: 28px 20px !important; }
+
+  /* Announcement bar simplification */
+  .ann-hide-mobile { display: none !important; }
+}
+
+@media (max-width: 480px) {
+  .lp-section  { padding: 48px 14px !important; }
+  .hero-inner  { padding: 32px 14px 48px !important; }
+  .auth-card   { padding: 24px 14px !important; }
+}

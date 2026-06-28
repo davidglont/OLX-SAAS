@@ -19,13 +19,13 @@ export default function AnnouncementBar() {
       zIndex: 100,
     }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", flexWrap: "wrap" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <div className="ann-hide-mobile" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
           <Flame size={13} color="#F5B731" fill="#F5B731" />
           <span style={{ fontSize: "12px", fontWeight: 800, color: "#F5B731", fontFamily: "Rubik,sans-serif", letterSpacing: "0.07em", textTransform: "uppercase" }}>
             Preț de lansare
           </span>
         </div>
-        <div style={{ width: "1px", height: "14px", background: "rgba(245,236,215,0.2)", flexShrink: 0 }} />
+        <div className="ann-hide-mobile" style={{ width: "1px", height: "14px", background: "rgba(245,236,215,0.2)", flexShrink: 0 }} />
         <span style={{ fontSize: "13px", color: "#F5ECD7" }}>
           <strong style={{ color: "#F5B731" }}>1.247 vânzători</strong> activi — Pro la{" "}
           <strong style={{ color: "#F5B731" }}>€10/lună</strong>, prețul va crește

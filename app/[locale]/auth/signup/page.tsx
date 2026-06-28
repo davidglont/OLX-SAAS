@@ -62,7 +62,7 @@ export default function SignupPage() {
           </span>
         </Link>
 
-        <div className="card" style={{ padding: "36px 32px" }}>
+        <div className="card auth-card" style={{ padding: "36px 32px" }}>
           <h1 style={{ fontFamily: "Rubik, sans-serif", fontSize: "22px", fontWeight: 700, textAlign: "center", marginBottom: "6px", color: "var(--color-foreground)" }}>
             {t("signup_title")}
           </h1>

@@ -52,6 +52,11 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   const isToolActive = pathname.startsWith(`/${locale}/tool`);
 
   return (
@@ -298,7 +303,7 @@ export default function Header() {
               )}
             </div>
           ) : (
-            <div style={{ display: "flex", gap: "8px" }}>
+            <div className="header-auth-desktop" style={{ display: "flex", gap: "8px" }}>
               <Link href={`/${locale}/auth/login`} style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "14px", fontWeight: 500, fontFamily: "Rubik, sans-serif", color: "var(--color-muted-foreground)", textDecoration: "none", transition: "color 0.2s" }}>
                 {t("login")}
               </Link>
@@ -339,7 +344,34 @@ export default function Header() {
               {cl.label}
             </Link>
           ))}
-          {!session && (
+          {session ? (
+            <div style={{ borderTop: "1px solid rgba(212,153,26,0.15)", marginTop: "8px", paddingTop: "16px" }}>
+              <div style={{ fontSize: "12px", color: "var(--color-muted-foreground)", marginBottom: "10px", paddingLeft: "2px" }}>
+                {session.user?.email}
+              </div>
+              {[
+                ...(session.user.role === "admin" ? [{ href: `/${locale}/admin`, label: "Admin Panel" }] : []),
+                { href: `/${locale}/dashboard`, label: t("dashboard") },
+                { href: `/${locale}/profile`, label: t("profile_settings") },
+                { href: `/${locale}/account`, label: t("account") },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  style={{ display: "block", padding: "11px 0", fontSize: "15px", fontWeight: 500, fontFamily: "Rubik, sans-serif", color: "var(--color-foreground)", textDecoration: "none", borderBottom: "1px solid rgba(212,153,26,0.08)" }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <button
+                onClick={() => { signOut({ callbackUrl: `/${locale}` }); setMenuOpen(false); }}
+                style={{ display: "block", width: "100%", textAlign: "left", padding: "12px 0", fontSize: "15px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "Rubik, sans-serif", fontWeight: 500, marginTop: "4px" }}
+              >
+                {t("logout")}
+              </button>
+            </div>
+          ) : (
             <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
               <Link href={`/${locale}/auth/login`} className="btn-secondary" style={{ flex: 1, justifyContent: "center", padding: "11px" }}>
                 {t("login")}

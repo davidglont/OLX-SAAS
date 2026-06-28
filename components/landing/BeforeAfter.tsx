@@ -46,7 +46,7 @@ export default function BeforeAfter() {
   const afterTags  = [t("after_tag1"), t("after_tag2"), t("after_tag3"), t("after_tag4"), t("after_tag5")];
 
   return (
-    <section ref={sectionRef} style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
+    <section ref={sectionRef} className="lp-section" style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "600px", height: "1px", background: "linear-gradient(to right, transparent, rgba(139,92,246,0.35), transparent)" }} />
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -67,7 +67,7 @@ export default function BeforeAfter() {
         </div>
 
         {/* Comparison */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "24px", alignItems: "center" }}>
+        <div className="ba-grid" style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "24px", alignItems: "center" }}>
 
           {/* Before */}
           <div ref={beforeRef} style={{ position: "relative" }}>
@@ -95,7 +95,7 @@ export default function BeforeAfter() {
           </div>
 
           {/* Arrow */}
-          <div ref={arrowRef} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+          <div ref={arrowRef} className="ba-arrow-icon" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
             <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: "linear-gradient(135deg,#8B5CF6,#EC4899)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 32px rgba(139,92,246,0.4), 0 0 64px rgba(236,72,153,0.2)", flexShrink: 0 }}>
               <ArrowRight size={22} color="white" />
             </div>

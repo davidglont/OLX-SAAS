@@ -15,7 +15,7 @@ export default function UrgencyBanner() {
   ];
 
   return (
-    <section style={{ padding: "0 28px 96px" }}>
+    <section className="lp-urgency" style={{ padding: "0 28px 96px" }}>
       <div style={{
         maxWidth: "900px",
         margin: "0 auto",

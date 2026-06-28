@@ -60,7 +60,7 @@ export default function Hero() {
       <div className="glow-orb" style={{ width: "700px", height: "700px", background: "radial-gradient(circle, rgba(212,153,26,0.13) 0%, transparent 70%)", top: "-180px", left: "-200px" }} />
       <div className="glow-orb" style={{ width: "500px", height: "500px", background: "radial-gradient(circle, rgba(224,123,57,0.09) 0%, transparent 70%)", bottom: "-100px", right: "-80px" }} />
 
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "80px 28px", width: "100%", position: "relative", zIndex: 10, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center" }}>
+      <div className="hero-inner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "80px 28px", width: "100%", position: "relative", zIndex: 10, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center" }}>
 
         {/* ── Left — copy ──────────────────────────────────────── */}
         <div>
@@ -187,8 +187,14 @@ export default function Hero() {
 
       <style>{`
         @media (max-width: 900px) {
-          .hero-preview { display: none; }
-          section > div { grid-template-columns: 1fr !important; }
+          .hero-preview { display: none !important; }
+          .hero-inner { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 768px) {
+          .hero-inner { padding: 40px 16px 60px !important; }
+        }
+        @media (max-width: 480px) {
+          .hero-inner { padding: 32px 14px 48px !important; }
         }
         .hero-live-dot {
           width: 7px; height: 7px; border-radius: 50%;

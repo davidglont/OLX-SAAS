@@ -41,7 +41,7 @@ export default function LoginPage() {
           </span>
         </Link>
 
-        <div className="card" style={{ padding: "36px 32px" }}>
+        <div className="card auth-card" style={{ padding: "36px 32px" }}>
           <h1 style={{ fontFamily: "Rubik, sans-serif", fontSize: "22px", fontWeight: 700, textAlign: "center", marginBottom: "6px", color: "var(--color-foreground)" }}>
             {t("login_title")}
           </h1>

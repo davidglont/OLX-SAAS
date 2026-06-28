@@ -120,7 +120,7 @@ export default function PricingSection() {
   }
 
   return (
-    <section id="pricing" ref={sectionRef} style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
+    <section id="pricing" ref={sectionRef} className="lp-section" style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "600px", height: "1px", background: "linear-gradient(to right, transparent, rgba(139,92,246,0.35), transparent)" }} />
       <div className="glow-orb" style={{ width: "700px", height: "400px", background: "radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%)", top: "50%", left: "50%", transform: "translate(-50%,-50%)", borderRadius: "50%" }} />
 

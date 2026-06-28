@@ -11,6 +11,15 @@ const ADMIN_SEGMENTS = ["/admin"];
 export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
+  // Block /api/admin from non-admins
+  if (pathname.startsWith("/api/admin")) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token || token.role !== "admin") {
+      return NextResponse.json({ error: "Acces interzis" }, { status: 403 });
+    }
+    return NextResponse.next();
+  }
+
   const isProtected = PROTECTED_SEGMENTS.some((seg) =>
     pathname.match(new RegExp(`^/[a-z]{2}${seg}(/|$)`))
   );
@@ -37,5 +46,8 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  matcher: [
+    "/((?!api|_next|_vercel|.*\\..*).*)",
+    "/api/admin/:path*",
+  ],
 };

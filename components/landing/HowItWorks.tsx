@@ -70,7 +70,7 @@ export default function HowItWorks() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
+    <section ref={sectionRef} className="lp-section" style={{ padding: "120px 28px", position: "relative", overflow: "hidden" }}>
       {/* Subtle divider gradient */}
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "600px", height: "1px", background: "linear-gradient(to right, transparent, rgba(139,92,246,0.4), transparent)" }} />
 

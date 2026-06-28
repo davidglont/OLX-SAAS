@@ -13,7 +13,7 @@ export default function Footer() {
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "48px 28px 32px" }}>
 
         {/* Top row */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "40px", marginBottom: "40px" }}>
+        <div className="footer-top-grid" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "40px", marginBottom: "40px" }}>
           {/* Brand */}
           <div style={{ maxWidth: "360px" }}>
             <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "9px", textDecoration: "none", marginBottom: "14px" }}>
@@ -42,7 +42,7 @@ export default function Footer() {
           </div>
 
           {/* Links grid */}
-          <div style={{ display: "flex", gap: "56px", flexWrap: "wrap" }}>
+          <div className="footer-links-row" style={{ display: "flex", gap: "56px", flexWrap: "wrap" }}>
             <div>
               <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
                 Produs
