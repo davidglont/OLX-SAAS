@@ -1,12 +1,34 @@
-import Groq from "groq-sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
-const TEXT_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
+const MODEL = "gemini-2.0-flash";
 
-function getClient(): Groq {
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) throw new Error("GROQ_API_KEY nu este setat in variabilele de mediu.");
-  return new Groq({ apiKey });
+function getClient() {
+  const apiKey = process.env.GOOGLE_AI_API_KEY;
+  if (!apiKey) throw new Error("GOOGLE_AI_API_KEY nu este setat in variabilele de mediu.");
+  return new GoogleGenerativeAI(apiKey);
+}
+
+async function generateText(prompt: string, systemInstruction?: string, maxTokens = 1000, temperature = 0.3): Promise<string> {
+  const model = getClient().getGenerativeModel({
+    model: MODEL,
+    systemInstruction: systemInstruction ?? undefined,
+    generationConfig: { maxOutputTokens: maxTokens, temperature },
+  });
+  const result = await model.generateContent(prompt);
+  return result.response.text();
+}
+
+async function generateWithImages(images: { data: string; mediaType: string }[], prompt: string, maxTokens = 3000, temperature = 0.3): Promise<string> {
+  const model = getClient().getGenerativeModel({
+    model: MODEL,
+    generationConfig: { maxOutputTokens: maxTokens, temperature },
+  });
+  const parts = [
+    ...images.map(img => ({ inlineData: { data: img.data, mimeType: img.mediaType } })),
+    { text: prompt },
+  ];
+  const result = await model.generateContent(parts);
+  return result.response.text();
 }
 
 export interface PhotoScore {
@@ -88,11 +110,6 @@ ${vintedType === "replica" ? "- IMPORTANT: Produsul este o REPLICA / REP. Specif
       : `PLATFORMA: OLX si Vinted (optimizeaza pentru ambele).
 - Titlu max 65 caractere, versatil pentru ambele platforme
 - Echilibru intre specificatii tehnice si detalii de stare`;
-
-  const imageContent = imageBase64List.map((img) => ({
-    type: "image_url" as const,
-    image_url: { url: `data:${img.mediaType};base64,${img.data}` },
-  }));
 
   const prompt = `Esti un expert marketplace copywriter cu 10+ ani experienta pe OLX si Vinted Romania. Stii exact ce cauta cumparatorii, ce titluri primesc click si cum sa scrii descrieri care vand rapid.
 
@@ -192,25 +209,9 @@ OUTPUT - returneaza EXCLUSIV JSON valid, fara text inainte sau dupa:
   }
 }`;
 
-  const response = await getClient().chat.completions.create({
-    model: VISION_MODEL,
-    max_tokens: 3000,
-    temperature: 0.3,
-    messages: [
-      {
-        role: "user",
-        content: [
-          ...imageContent,
-          { type: "text" as const, text: prompt },
-        ],
-      },
-    ],
-  });
-
-  const text = response.choices[0]?.message?.content ?? "";
+  const text = await generateWithImages(imageBase64List, prompt, 3000, 0.3);
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("Invalid AI response format");
-
   return JSON.parse(jsonMatch[0]) as AnalysisResult;
 }
 
@@ -306,17 +307,7 @@ Return ONLY valid JSON:
   "negotiationTips": ["Tip 1", "Tip 2", "Tip 3"]
 }`;
 
-  const response = await getClient().chat.completions.create({
-    model: TEXT_MODEL,
-    max_tokens: 800,
-    temperature: 0.2,
-    messages: [
-      { role: "system", content: systemMessage },
-      { role: "user", content: userPrompt },
-    ],
-  });
-
-  const text = response.choices[0]?.message?.content ?? "";
+  const text = await generateText(userPrompt, systemMessage, 800, 0.2);
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("Invalid AI response");
   return JSON.parse(jsonMatch[0]) as PriceEstimate;
@@ -385,14 +376,7 @@ Return ONLY valid JSON (array with exactly 3 objects):
   }
 ]`;
 
-  const response = await getClient().chat.completions.create({
-    model: TEXT_MODEL,
-    max_tokens: 700,
-    temperature: 0.5,
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  const text = response.choices[0]?.message?.content ?? "";
+  const text = await generateText(prompt, undefined, 700, 0.5);
   const jsonMatch = text.match(/\[[\s\S]*\]/);
   if (!jsonMatch) throw new Error("Invalid AI response");
   return JSON.parse(jsonMatch[0]) as TitleVariant[];
@@ -460,14 +444,7 @@ Return ONLY valid JSON:
   ]
 }`;
 
-  const response = await getClient().chat.completions.create({
-    model: TEXT_MODEL,
-    max_tokens: 900,
-    temperature: 0.2,
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  const text = response.choices[0]?.message?.content ?? "";
+  const text = await generateText(prompt, undefined, 900, 0.2);
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("Invalid AI response");
   return JSON.parse(jsonMatch[0]) as ListingCheck;
