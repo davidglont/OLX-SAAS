@@ -307,7 +307,8 @@ Return ONLY valid JSON:
   "negotiationTips": ["Tip 1", "Tip 2", "Tip 3"]
 }`;
 
-  const text = await generateText(userPrompt, systemMessage, 800, 0.2);
+  const fullPrompt = `${systemMessage}\n\n${userPrompt}`;
+  const text = await generateText(fullPrompt, undefined, 800, 0.2);
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("Invalid AI response");
   return JSON.parse(jsonMatch[0]) as PriceEstimate;
