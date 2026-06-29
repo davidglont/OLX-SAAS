@@ -97,7 +97,7 @@ export default function HowItWorks() {
             <div
               key={key}
               ref={(el) => { cardsRef.current[index] = el; }}
-              className="card"
+              className="card step-card"
               style={{ padding: "36px 32px", position: "relative", overflow: "hidden", cursor: "default" }}
             >
               {/* Large watermark number */}

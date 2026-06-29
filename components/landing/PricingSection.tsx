@@ -141,7 +141,7 @@ export default function PricingSection() {
         </div>
 
         {/* Annual / Monthly toggle */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", marginBottom: "56px" }}>
+        <div className="pricing-toggle-row" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", marginBottom: "56px" }}>
           <span style={{ fontSize: "14px", color: annual ? "var(--color-muted-foreground)" : "var(--color-foreground)", fontWeight: annual ? 400 : 600 }}>
             {t("toggle_monthly")}
           </span>
@@ -162,13 +162,14 @@ export default function PricingSection() {
           </span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", alignItems: "start" }}>
+        <div className="pricing-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", alignItems: "start" }}>
           {plans.map((plan, index) => (
             <div
               key={plan.key}
               ref={el => { cardsRef.current[index] = el; }}
               onMouseMove={e => handleMouseMove(e, index)}
               onMouseLeave={() => handleMouseLeave(index)}
+              className="pricing-card"
               style={{
                 position: "relative",
                 borderRadius: "20px",

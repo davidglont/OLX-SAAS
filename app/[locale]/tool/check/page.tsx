@@ -49,7 +49,7 @@ export default function CheckToolPage() {
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
         <Header />
         <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
-          <div className="card" style={{ padding: "48px 36px", textAlign: "center", maxWidth: "480px", width: "100%" }}>
+          <div className="card tool-locked-card" style={{ padding: "48px 36px", textAlign: "center", maxWidth: "480px", width: "100%" }}>
             <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
               <Lock size={24} color="var(--primary-light)" />
             </div>
@@ -187,7 +187,7 @@ export default function CheckToolPage() {
         {result && (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {/* Overall score */}
-            <div className="card" style={{ padding: "24px", display: "flex", gap: "20px", alignItems: "center" }}>
+            <div className="card check-score-row" style={{ padding: "24px", display: "flex", gap: "20px", alignItems: "center" }}>
               <ScoreCircle score={result.overallScore} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "16px", color: "var(--color-foreground)", marginBottom: "12px" }}>

@@ -302,6 +302,13 @@ select option { background: var(--surface); color: var(--color-foreground); }
   /* Hero inner grid */
   .hero-inner { padding: 40px 16px 60px !important; }
 
+  /* Hero headline — clamp bottoms at 32px on narrow screens */
+  .hero-headline { font-size: clamp(28px, 8vw, 48px) !important; }
+
+  /* Hero CTA buttons — stack vertically */
+  .hero-ctas { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+  .hero-ctas > * { justify-content: center !important; text-align: center; }
+
   /* Footer */
   .footer-top-grid   { grid-template-columns: 1fr !important; }
   .footer-links-row  { flex-direction: column !important; gap: 24px !important; }
@@ -336,6 +343,38 @@ select option { background: var(--surface); color: var(--color-foreground); }
 
   /* Case-studies card padding */
   .cs-card { padding: 24px 16px !important; }
+
+  /* Pricing section — force single column, reduce card padding */
+  .pricing-grid { grid-template-columns: 1fr !important; }
+  .pricing-card { padding: 24px 18px !important; }
+
+  /* Pricing toggle row — prevent overflow */
+  .pricing-toggle-row { flex-wrap: wrap !important; justify-content: center !important; gap: 8px !important; }
+
+  /* HowItWorks step cards — reduce side padding */
+  .step-card { padding: 28px 20px !important; }
+
+  /* Dashboard main — ensure top padding clears fixed header */
+  .dashboard-main { padding-top: 88px !important; }
+
+  /* Dashboard listing card — allow title/desc to wrap instead of truncate */
+  .listing-title { white-space: normal !important; overflow: visible !important; text-overflow: unset !important; }
+
+  /* Price tool — selects grid single column on mobile */
+  .price-selects-grid { grid-template-columns: 1fr !important; }
+
+  /* Price tool locked card — reduce padding */
+  .tool-locked-card { padding: 36px 20px !important; }
+
+  /* Check tool — score row stacks vertically */
+  .check-score-row { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+
+  /* Account profile card — tighten avatar row */
+  .account-profile-row { gap: 12px !important; }
+  .account-profile-row .account-name { font-size: 16px !important; }
+
+  /* Mobile drawer padding fix */
+  .mobile-drawer { padding-left: 16px !important; padding-right: 16px !important; }
 }
 
 @media (max-width: 480px) {
@@ -344,4 +383,17 @@ select option { background: var(--surface); color: var(--color-foreground); }
   .auth-card   { padding: 24px 14px !important; }
   .tool-main   { padding-top: 88px !important; }
   .cs-card     { padding: 20px 14px !important; }
+
+  /* Pricing card further tighten on very small screens */
+  .pricing-card { padding: 20px 14px !important; }
+
+  /* Step cards */
+  .step-card { padding: 24px 14px !important; }
+
+  /* Score circle shrink slightly */
+  .check-score-circle { width: 60px !important; height: 60px !important; }
+  .check-score-circle span { font-size: 18px !important; }
+
+  /* Account page main top padding */
+  .account-main { padding-top: 88px !important; }
 }

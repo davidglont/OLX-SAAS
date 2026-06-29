@@ -325,7 +325,7 @@ export default function Header() {
 
       {/* Mobile drawer */}
       {menuOpen && (
-        <div style={{ background: "rgba(9,9,26,0.97)", backdropFilter: "blur(20px)", borderTop: "1px solid rgba(139,92,246,0.15)", padding: "16px 28px 24px" }}>
+        <div className="mobile-drawer" style={{ background: "rgba(9,9,26,0.97)", backdropFilter: "blur(20px)", borderTop: "1px solid rgba(139,92,246,0.15)", padding: "16px 28px 24px" }}>
           <Link href={`/${locale}`} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "12px 0", fontSize: "16px", fontWeight: 500, fontFamily: "Rubik, sans-serif", color: pathname === `/${locale}` ? "var(--primary-light)" : "var(--color-foreground)", textDecoration: "none", borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
             {t("home")}
           </Link>

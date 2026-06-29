@@ -66,7 +66,7 @@ export default function PriceToolPage() {
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
         <Header />
         <main style={{ flex: 1, maxWidth: "720px", margin: "0 auto", padding: "100px 28px 80px", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="card" style={{ padding: "48px 36px", textAlign: "center", maxWidth: "480px", width: "100%" }}>
+          <div className="card tool-locked-card" style={{ padding: "48px 36px", textAlign: "center", maxWidth: "480px", width: "100%" }}>
             <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
               <Lock size={24} color="var(--primary-light)" />
             </div>
@@ -162,7 +162,7 @@ export default function PriceToolPage() {
             <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px", textAlign: "right" }}>{description.length}/500</div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "14px" }}>
+          <div className="price-selects-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "14px" }}>
             <div>
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
                 {isRo ? "Categorie" : "Category"}

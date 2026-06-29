@@ -75,7 +75,7 @@ export default function Hero() {
 
           <h1
             ref={headRef}
-            className="display-text"
+            className="display-text hero-headline"
             style={{ fontSize: "clamp(40px,5.2vw,76px)", color: "var(--color-foreground)", marginBottom: "24px", perspective: "800px" }}
           >
             {words.map((word, i) => (
@@ -93,7 +93,7 @@ export default function Hero() {
             {t("subtitle")}
           </p>
 
-          <div ref={ctaRef} style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "40px" }}>
+          <div ref={ctaRef} className="hero-ctas" style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "40px" }}>
             <Link href={`/${locale}/auth/signup`} className="btn-primary" style={{ fontSize: "16px", padding: "15px 32px", gap: "10px" }}>
               {t("cta_primary")} <ArrowRight size={17} />
             </Link>
@@ -192,9 +192,13 @@ export default function Hero() {
         }
         @media (max-width: 768px) {
           .hero-inner { padding: 40px 16px 60px !important; }
+          .hero-headline { font-size: clamp(28px, 8vw, 48px) !important; }
+          .hero-ctas { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+          .hero-ctas > * { justify-content: center !important; }
         }
         @media (max-width: 480px) {
           .hero-inner { padding: 32px 14px 48px !important; }
+          .hero-headline { font-size: clamp(26px, 7.5vw, 40px) !important; }
         }
         .hero-live-dot {
           width: 7px; height: 7px; border-radius: 50%;

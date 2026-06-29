@@ -65,7 +65,7 @@ export default function AccountPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
       <Header />
-      <main style={{ flex: 1, maxWidth: "700px", margin: "0 auto", width: "100%", padding: "40px 24px" }}>
+      <main className="tool-main account-main" style={{ flex: 1, maxWidth: "700px", margin: "0 auto", width: "100%", padding: "40px 24px" }}>
         <h1 style={{ fontFamily: "Rubik, sans-serif", fontSize: "28px", fontWeight: 700, marginBottom: "32px", display: "flex", alignItems: "center", gap: "10px" }}>
           <User size={24} color="var(--color-primary)" />
           {t("title")}
@@ -82,7 +82,7 @@ export default function AccountPage() {
 
         {/* Profile card */}
         <div className="card" style={{ padding: "28px", marginBottom: "20px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="account-profile-row" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "linear-gradient(135deg, #7C3AED 0%, #6366F1 100%)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               {session?.user?.image ? (
                 <img src={session.user.image} alt="" width={56} height={56} style={{ borderRadius: "50%", objectFit: "cover" }} />
@@ -94,7 +94,7 @@ export default function AccountPage() {
             </div>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "18px" }}>{session?.user?.name}</span>
+                <span className="account-name" style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "18px" }}>{session?.user?.name}</span>
                 {isAdmin && (
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px", fontWeight: 700, padding: "2px 10px", borderRadius: "20px", background: "rgba(212,153,26,0.12)", border: "1px solid rgba(212,153,26,0.3)", color: "var(--primary-light)", fontFamily: "Rubik, sans-serif" }}>
                     <Shield size={10} />
