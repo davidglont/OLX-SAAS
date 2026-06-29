@@ -101,7 +101,7 @@ export default function ToolPage() {
       if (res.status === 403 && data.code === "LIMIT_REACHED") { setLimitReached(true); return; }
       if (!res.ok) { setError((data.error as string) ?? t("error")); return; }
 
-      setResult(data as AnalysisResult);
+      setResult(data as unknown as AnalysisResult);
       setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
     } catch {
       setError("Eroare de retea. Verifica conexiunea si incearca din nou.");
