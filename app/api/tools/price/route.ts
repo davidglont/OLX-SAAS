@@ -36,7 +36,8 @@ export async function POST(req: NextRequest) {
 
     const result = await estimatePrice(description.trim(), language as "ro" | "en", productType as "original" | "replica" | undefined);
     return NextResponse.json(result);
-  } catch {
-    return NextResponse.json({ error: "Eroare AI. Incearca din nou." }, { status: 500 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Eroare necunoscuta";
+    return NextResponse.json({ error: `Eroare AI: ${message.slice(0, 120)}` }, { status: 500 });
   }
 }

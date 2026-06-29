@@ -63,9 +63,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Eroare necunoscuta";
-    const isGroqError = message.includes("GROQ") || message.includes("groq") || message.includes("API key") || message.includes("model");
+    const isAIError = message.includes("API key") || message.includes("GOOGLE") || message.includes("GROQ") || message.includes("model") || message.includes("quota") || message.includes("API_KEY");
     return NextResponse.json(
-      { error: isGroqError ? "Serviciul AI este temporar indisponibil. Incearca din nou in cateva minute." : "Eroare de server. Incearca din nou." },
+      { error: isAIError ? `Serviciul AI indisponibil: ${message.slice(0, 120)}` : `Eroare de server: ${message.slice(0, 120)}` },
       { status: 500 }
     );
   }
