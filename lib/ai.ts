@@ -223,15 +223,35 @@ export async function estimatePrice(
 
   const systemMessage = productType === "replica"
     ? (isRo
-      ? `Esti expert in preturi second-hand Romania. REGULA ABSOLUTA: Produsul este o REPLICA/CONTRAFACUTA, NU original. Pretul OBLIGATORIU trebuie sa fie de 5-15% din pretul originalului. Exemple REPLICA pe piata romaneasca: Jordan/Nike/Adidas replica=50-180 RON | Louis Vuitton replica=80-200 RON | Geanta luxury replica=60-250 RON | Ceas luxury replica=40-200 RON | Haine brand replica=30-120 RON. NICIODATA nu estima replica la pretul originalului. Mentioneaza explicit in justificare ca este replica.`
-      : `You are a Romanian second-hand market expert. ABSOLUTE RULE: This is a REPLICA/FAKE product. Price it at 5-15% of the original's value. NEVER price a replica at original price. Note it's a replica in the justification.`)
+      ? `Esti expert in preturi second-hand Romania. REGULA ABSOLUTA: Produsul este o REPLICA/CONTRAFACUTA, NU original autentic. Pretul OBLIGATORIU trebuie sa fie de 20-40% din pretul unui original second-hand similar. Exemple concrete REPLICA pe piata romaneasca 2025:
+- Jordan 4 / Nike SB Dunk replica = 150-350 RON (originalul second-hand = 600-1400 RON)
+- Adidas Yeezy replica = 120-280 RON (originalul second-hand = 800-2500 RON)
+- Nike/Adidas sneakers replica = 80-200 RON (originalul = 300-800 RON)
+- Geanta Louis Vuitton replica = 200-500 RON (originalul second-hand = 1500-4000 RON)
+- Geanta Gucci/Prada replica = 150-400 RON (originalul second-hand = 1200-3500 RON)
+- Ceas luxury replica (Rolex/AP) = 100-300 RON (originalul = mii de euro)
+- Haine brand replica (Stone Island, CP Company etc.) = 60-180 RON (originalul = 600-2000 RON)
+NICIODATA nu estima replica aproape de pretul originalului. Replica = 20-40% din pretul originalului second-hand, INTOTDEAUNA.
+Mentioneaza OBLIGATORIU in justificare ca este replica, ca pretul reflecta statutul de replica, si ca vanzatorul trebuie sa declare ca este replica (ilegal sa o vinzi ca original).`
+      : `You are a Romanian second-hand market expert. ABSOLUTE RULE: This is a REPLICA/COUNTERFEIT product, NOT authentic. Price it at 20-40% of the equivalent original second-hand price. Concrete examples:
+- Jordan 4 / Nike SB Dunk replica = 150-350 RON (authentic second-hand = 600-1400 RON)
+- Luxury bag replica (LV/Gucci) = 200-500 RON (authentic second-hand = 1500-4000 RON)
+- Brand clothing replica = 60-180 RON (authentic = 600-2000 RON)
+NEVER price a replica close to authentic price. Replica = 20-40% of the authentic second-hand value.
+The justification MUST state it is a replica, explain the heavy discount reflects replica status, and warn the seller to disclose it as a replica (selling as authentic is illegal).`)
     : productType === "original"
     ? (isRo
-      ? `Esti expert in preturi second-hand Romania. Produsul este ORIGINAL / AUTENTIC. Estimeaza la pretul de piata pentru produse autentice. Calibrare 2025: Jordan 4 original nou=900-1400 RON | Jordan 4 second=600-1000 RON | Nike SB Dunk original=700-2500 RON | Sneakers Nike/Adidas original nou=400-1200 RON | Adidas Yeezy=800-2500 RON.`
-      : `You are a Romanian second-hand market expert. This is an AUTHENTIC/ORIGINAL product. Price it at authentic market value.`)
+      ? `Esti expert in preturi second-hand Romania. Produsul este ORIGINAL / AUTENTIC - cu provenienta verificabila. Estimeaza la pretul de piata COMPLET pentru produse autentice. Calibrare 2025:
+- Jordan 4 original nou=900-1400 RON | Jordan 4 second-hand=600-1000 RON
+- Nike SB Dunk original=700-2500 RON | Adidas Yeezy=800-2500 RON
+- Sneakers Nike/Adidas original nou=400-1200 RON
+- Louis Vuitton second-hand=1500-4000 RON | Gucci second-hand=1200-3500 RON
+- Ceasuri luxury authentic: pret de revanzare de piata
+Subliniaza in justificare valoarea autenticitatii si de ce produsul original comanda un pret premium fata de replica.`
+      : `You are a Romanian second-hand market expert. This is an AUTHENTIC/ORIGINAL product with verifiable provenance. Price it at FULL authentic market value. The justification must emphasize the authenticity premium and explain why buyers pay significantly more for an original versus a replica.`)
     : (isRo
-      ? `Esti expert in preturi pe piata second-hand din Romania (OLX, Vinted, Facebook Marketplace). Estimeaza pretul real de vanzare in RON.`
-      : `You are a Romanian second-hand market pricing expert. Estimate the real selling price in RON.`);
+      ? `Esti expert in preturi pe piata second-hand din Romania (OLX, Vinted, Facebook Marketplace). Tipul produsului nu a fost specificat (original sau replica). Ofera un interval de pret care acopera ambele scenarii: pretul minim sa reflecte varianta replica (20-40% din valoarea originalului), pretul maxim sa reflecte varianta originala autentica. Mentioneaza in justificare ca pretul variaza semnificativ in functie de autenticitate.`
+      : `You are a Romanian second-hand market pricing expert. The product type (original vs replica) was not specified. Provide a price range that covers both scenarios: the minimum should reflect replica pricing (20-40% of authentic value), the maximum should reflect authentic original pricing. The justification must note that price varies significantly based on authenticity.`);
 
   const calibration = isRo ? `
 CALIBRARE PIATA ROMANEASCA 2025:
@@ -240,18 +260,29 @@ Laptopuri: MacBook Air M2=4000-5500 RON | MacBook Pro M3=7000-10000 RON | Laptop
 Console: PS5 nou=2200-2500 RON | PS5 second=1700-2100 RON | Nintendo Switch=1400-1800 RON
 Electronice: AirPods Pro 2=700-1000 RON | iPad Air=2000-3000 RON | Apple Watch S9=1500-2200 RON
 Sneakers ORIGINAL: Jordan 4=900-1400 RON nou | Nike SB Dunk=700-2500 RON | Yeezy=800-2500 RON | Nike/Adidas clasic=300-800 RON
-Sneakers REPLICA: Jordan/Nike/Adidas replica=50-180 RON (OBLIGATORIU mult mai mic decat originalul)
+Sneakers REPLICA: Jordan/Nike/Adidas replica=150-350 RON (OBLIGATORIU 20-40% din pretul originalului second-hand)
 Genti luxury ORIGINAL second: Louis Vuitton=1500-4000 RON | Gucci=1200-3500 RON
-Genti luxury REPLICA: LV replica=80-200 RON | Gucci replica=80-250 RON
+Genti luxury REPLICA: LV replica=200-500 RON | Gucci replica=150-400 RON
 
-REGULI:
-- Second-hand = 50-70% din pretul de nou pentru electronice
+REGULI FUNDAMENTALE:
+- Second-hand ORIGINAL = 50-70% din pretul de nou
 - Tine cont de stare: nou=100%, ca nou=85%, buna=70%, acceptabila=55%
-- Replica = INTOTDEAUNA 5-15% din pretul originalului` : "";
+- Replica = INTOTDEAUNA 20-40% din pretul originalului second-hand echivalent (NU din pretul de nou)
+- Diferenta de pret intre replica si original trebuie sa fie SEMNIFICATIVA (de 3-5x)` : "";
+
+  const replicaReminder = productType === "replica"
+    ? (isRo
+      ? `\nATENTIE: Acesta este un produs REPLICA. Pretul TREBUIE sa fie 20-40% din valoarea unui original second-hand. NU estima la pretul unui original.\n`
+      : `\nWARNING: This is a REPLICA product. Price MUST be 20-40% of authentic second-hand value. DO NOT price at original/authentic levels.\n`)
+    : productType === "original"
+    ? (isRo
+      ? `\nACEST PRODUS ESTE ORIGINAL / AUTENTIC. Estimeaza la pretul de piata complet pentru produse autentice, fara reducere pentru replica.\n`
+      : `\nTHIS PRODUCT IS ORIGINAL / AUTHENTIC. Price at full authentic market value, no replica discount.\n`)
+    : "";
 
   const userPrompt = isRo
     ? `${calibration}
-
+${replicaReminder}
 PRODUS: "${description}"
 
 Returneaza EXCLUSIV JSON valid:
@@ -260,10 +291,10 @@ Returneaza EXCLUSIV JSON valid:
   "max": 250,
   "currency": "RON",
   "suggestedPrice": 200,
-  "justification": "2-3 propozitii despre pretul corect pe piata romaneasca",
+  "justification": "2-3 propozitii despre pretul corect pe piata romaneasca, mentionand explicit daca este replica sau original si cum influenteaza asta pretul",
   "negotiationTips": ["Sfat 1 specific", "Sfat 2", "Sfat 3"]
 }`
-    : `PRODUCT: "${description}"
+    : `${replicaReminder}PRODUCT: "${description}"
 
 Return ONLY valid JSON:
 {
@@ -271,7 +302,7 @@ Return ONLY valid JSON:
   "max": 250,
   "currency": "RON",
   "suggestedPrice": 200,
-  "justification": "2-3 sentence explanation for the Romanian market",
+  "justification": "2-3 sentence explanation for the Romanian market, explicitly mentioning whether this is a replica or original and how that affects the price",
   "negotiationTips": ["Tip 1", "Tip 2", "Tip 3"]
 }`;
 
