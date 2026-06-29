@@ -12,36 +12,34 @@ export async function checkAndIncrementUsage(
     select: { role: true, usageLimit: true },
   });
 
-  // Admin sau usageLimit = -1 -> nelimitat
-  if (user?.role === "admin" || user?.usageLimit === -1) {
-    const log = await prisma.usageLog.upsert({
-      where: { userId_date: { userId, date: today } },
-      update: { count: { increment: 1 } },
-      create: { userId, date: today, count: 1 },
-    });
-    return { allowed: true, used: log.count, limit: -1 };
-  }
-
-  // usageLimit custom setat de admin
   const planLimit = PLANS[(plan as PlanKey) ?? "free"]?.limit ?? 1;
   const limit = user?.usageLimit ?? planLimit;
+  const isUnlimited = user?.role === "admin" || user?.usageLimit === -1;
 
-  const log = await prisma.usageLog.upsert({
+  let log = await prisma.usageLog.findUnique({
     where: { userId_date: { userId, date: today } },
-    update: {},
-    create: { userId, date: today, count: 0 },
   });
 
-  if (log.count >= limit) {
+  if (!log) {
+    if (!isUnlimited && 0 >= limit) {
+      return { allowed: false, used: 0, limit };
+    }
+    log = await prisma.usageLog.create({
+      data: { userId, date: today, count: 1 },
+    });
+    return { allowed: true, used: 1, limit: isUnlimited ? -1 : limit };
+  }
+
+  if (!isUnlimited && log.count >= limit) {
     return { allowed: false, used: log.count, limit };
   }
 
-  await prisma.usageLog.update({
+  const updated = await prisma.usageLog.update({
     where: { userId_date: { userId, date: today } },
     data: { count: { increment: 1 } },
   });
 
-  return { allowed: true, used: log.count + 1, limit };
+  return { allowed: true, used: updated.count, limit: isUnlimited ? -1 : limit };
 }
 
 export async function getTodayUsage(
