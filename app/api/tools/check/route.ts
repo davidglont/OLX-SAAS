@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Eroare necunoscuta";
-    return NextResponse.json({ error: `Eroare AI: ${message.slice(0, 120)}` }, { status: 500 });
+    const cause = err instanceof Error && err.cause ? ` | cause: ${String(err.cause)}` : "";
+    return NextResponse.json({ error: `Eroare AI: ${(message + cause).slice(0, 400)}` }, { status: 500 });
   }
 }

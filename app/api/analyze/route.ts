@@ -63,9 +63,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Eroare necunoscuta";
+    const cause = err instanceof Error && err.cause ? ` | cause: ${String(err.cause)}` : "";
+    const fullMessage = `${message}${cause}`;
     const isAIError = message.includes("API key") || message.includes("GOOGLE") || message.includes("GROQ") || message.includes("model") || message.includes("quota") || message.includes("API_KEY");
     return NextResponse.json(
-      { error: isAIError ? `Serviciul AI indisponibil: ${message.slice(0, 120)}` : `Eroare de server: ${message.slice(0, 120)}` },
+      { error: isAIError ? `Serviciul AI indisponibil: ${fullMessage.slice(0, 400)}` : `Eroare de server: ${fullMessage.slice(0, 400)}` },
       { status: 500 }
     );
   }
