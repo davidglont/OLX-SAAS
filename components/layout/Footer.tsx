@@ -44,9 +44,9 @@ export default function Footer() {
           {/* Links grid */}
           <div className="footer-links-row" style={{ display: "flex", gap: "56px", flexWrap: "wrap" }}>
             <div>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
+              <h3 style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
                 Produs
-              </div>
+              </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {[
                   { href: `/${locale}`, label: t("home") },
@@ -62,9 +62,9 @@ export default function Footer() {
             </div>
 
             <div>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
+              <h3 style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
                 {locale === "ro" ? "Companie" : "Company"}
-              </div>
+              </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {[
                   { href: `/${locale}/about`, label: locale === "ro" ? "Despre noi" : "About" },
@@ -80,9 +80,9 @@ export default function Footer() {
             </div>
 
             <div>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
+              <h3 style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Rubik, sans-serif", marginBottom: "14px" }}>
                 Legal
-              </div>
+              </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {[
                   { href: `/${locale}/privacy`, label: locale === "ro" ? "Confidențialitate" : "Privacy Policy" },

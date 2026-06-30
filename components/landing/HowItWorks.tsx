@@ -26,6 +26,7 @@ export default function HowItWorks() {
   const cardsRef   = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = gsap.context(() => {
       /* Heading */
       gsap.fromTo(headRef.current,

@@ -21,6 +21,12 @@ export default function Header() {
   const [companyOpen, setCompanyOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
+  const toolsButtonRef = useRef<HTMLButtonElement>(null);
+  const companyButtonRef = useRef<HTMLButtonElement>(null);
+  const userMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const toolsMenuRef = useRef<HTMLDivElement>(null);
+  const companyMenuRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const isLandingPage = pathname === `/${locale}`;
 
   const otherLocale = locale === "ro" ? "en" : "ro";
@@ -42,6 +48,7 @@ export default function Header() {
 
   useEffect(() => {
     if (!headerRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     gsap.fromTo(headerRef.current,
       { y: -64, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.1 }
@@ -58,6 +65,30 @@ export default function Header() {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (toolsOpen) (toolsMenuRef.current?.querySelector("a") as HTMLElement | null)?.focus();
+  }, [toolsOpen]);
+
+  useEffect(() => {
+    if (companyOpen) (companyMenuRef.current?.querySelector("a") as HTMLElement | null)?.focus();
+  }, [companyOpen]);
+
+  useEffect(() => {
+    if (userMenuOpen) (userMenuRef.current?.querySelector("a, button") as HTMLElement | null)?.focus();
+  }, [userMenuOpen]);
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      if (toolsOpen) { setToolsOpen(false); toolsButtonRef.current?.focus(); }
+      else if (companyOpen) { setCompanyOpen(false); companyButtonRef.current?.focus(); }
+      else if (userMenuOpen) { setUserMenuOpen(false); userMenuButtonRef.current?.focus(); }
+      else if (menuOpen) setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [toolsOpen, companyOpen, userMenuOpen, menuOpen]);
 
   const isToolActive = pathname.startsWith(`/${locale}/tool`);
 
@@ -90,6 +121,7 @@ export default function Header() {
           {/* Home */}
           <Link
             href={`/${locale}`}
+            aria-current={pathname === `/${locale}` ? "page" : undefined}
             style={{
               padding: "7px 16px",
               borderRadius: "10px",
@@ -109,6 +141,10 @@ export default function Header() {
           {/* Tools dropdown */}
           <div style={{ position: "relative" }}>
             <button
+              ref={toolsButtonRef}
+              aria-haspopup="true"
+              aria-expanded={toolsOpen}
+              aria-controls="tools-dropdown"
               onClick={() => setToolsOpen(!toolsOpen)}
               style={{
                 display: "flex",
@@ -135,7 +171,7 @@ export default function Header() {
               <div onClick={() => setToolsOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 800 }} />
             )}
             {toolsOpen && (
-              <div style={{ position: "absolute", left: 0, top: "calc(100% + 10px)", background: "var(--surface-2)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "14px", minWidth: "220px", overflow: "hidden", zIndex: 900, boxShadow: "0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1)" }}>
+              <div id="tools-dropdown" ref={toolsMenuRef} role="menu" style={{ position: "absolute", left: 0, top: "calc(100% + 10px)", background: "var(--surface-2)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "14px", minWidth: "220px", overflow: "hidden", zIndex: 900, boxShadow: "0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1)" }}>
                 {toolLinks.map((tl) => {
                   const TIcon = tl.icon;
                   const active = pathname === tl.href;
@@ -143,6 +179,8 @@ export default function Header() {
                     <Link
                       key={tl.href}
                       href={tl.href}
+                      role="menuitem"
+                      aria-current={active ? "page" : undefined}
                       onClick={() => setToolsOpen(false)}
                       style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 16px", fontSize: "13px", fontWeight: 500, color: active ? "var(--color-foreground)" : "var(--color-muted-foreground)", textDecoration: "none", background: active ? "rgba(139,92,246,0.08)" : "transparent", transition: "background 0.15s", borderBottom: "1px solid rgba(139,92,246,0.07)" }}
                     >
@@ -179,6 +217,10 @@ export default function Header() {
           {/* Company dropdown */}
           <div style={{ position: "relative" }}>
             <button
+              ref={companyButtonRef}
+              aria-haspopup="true"
+              aria-expanded={companyOpen}
+              aria-controls="company-dropdown"
               onClick={() => setCompanyOpen(!companyOpen)}
               style={{
                 display: "flex",
@@ -204,13 +246,14 @@ export default function Header() {
               <div onClick={() => setCompanyOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 800 }} />
             )}
             {companyOpen && (
-              <div style={{ position: "absolute", left: 0, top: "calc(100% + 10px)", background: "var(--surface-2)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "14px", minWidth: "200px", overflow: "hidden", zIndex: 900, boxShadow: "0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1)" }}>
+              <div id="company-dropdown" ref={companyMenuRef} role="menu" style={{ position: "absolute", left: 0, top: "calc(100% + 10px)", background: "var(--surface-2)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "14px", minWidth: "200px", overflow: "hidden", zIndex: 900, boxShadow: "0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1)" }}>
                 {companyLinks.map((cl) => {
                   const CIcon = cl.icon;
                   return (
                     <Link
                       key={cl.href}
                       href={cl.href}
+                      role="menuitem"
                       onClick={() => setCompanyOpen(false)}
                       style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 16px", fontSize: "13px", fontWeight: 500, color: "var(--color-muted-foreground)", textDecoration: "none", transition: "background 0.15s", borderBottom: "1px solid rgba(139,92,246,0.07)" }}
                     >
@@ -231,6 +274,7 @@ export default function Header() {
 
           {/* Locale switcher */}
           <button
+            aria-label={locale === "ro" ? "Switch to English" : "Comută la română"}
             onClick={() => router.push(switchedPath)}
             style={{
               padding: "5px 11px",
@@ -252,6 +296,11 @@ export default function Header() {
           {session ? (
             <div style={{ position: "relative" }}>
               <button
+                ref={userMenuButtonRef}
+                aria-label={locale === "ro" ? `Meniu cont: ${session.user?.name ?? ""}` : `Account menu: ${session.user?.name ?? ""}`}
+                aria-expanded={userMenuOpen}
+                aria-haspopup="true"
+                aria-controls="user-dropdown"
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 12px 6px 8px", borderRadius: "10px", border: "1px solid rgba(139,92,246,0.2)", background: "rgba(13,13,34,0.6)", cursor: "pointer" }}
               >
@@ -269,7 +318,7 @@ export default function Header() {
                 <div onClick={() => setUserMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 800 }} />
               )}
               {userMenuOpen && (
-                <div style={{ position: "absolute", right: 0, top: "calc(100% + 10px)", background: "var(--surface-2)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "14px", minWidth: "200px", overflow: "hidden", zIndex: 900, boxShadow: "0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1)" }}>
+                <div id="user-dropdown" ref={userMenuRef} role="menu" style={{ position: "absolute", right: 0, top: "calc(100% + 10px)", background: "var(--surface-2)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "14px", minWidth: "200px", overflow: "hidden", zIndex: 900, boxShadow: "0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1)" }}>
                   <div style={{ padding: "14px 16px", borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
                     <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)" }}>{session.user?.name}</div>
                     <div style={{ fontSize: "12px", color: "var(--color-muted-foreground)", marginTop: "2px" }}>{session.user?.email}</div>
@@ -283,6 +332,7 @@ export default function Header() {
                     <Link
                       key={item.href}
                       href={item.href}
+                      role="menuitem"
                       onClick={() => setUserMenuOpen(false)}
                       style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 16px", fontSize: "14px", color: "var(--color-foreground)", textDecoration: "none" }}
                     >
@@ -291,6 +341,7 @@ export default function Header() {
                     </Link>
                   ))}
                   <button
+                    role="menuitem"
                     onClick={() => { signOut({ callbackUrl: `/${locale}` }); setUserMenuOpen(false); }}
                     style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 16px", fontSize: "14px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", width: "100%", borderTop: "1px solid rgba(139,92,246,0.1)" }}
                   >
@@ -316,7 +367,9 @@ export default function Header() {
             onClick={() => setMenuOpen(!menuOpen)}
             style={{ display: "none", background: "none", border: "1px solid rgba(139,92,246,0.25)", borderRadius: "8px", color: "var(--color-foreground)", padding: "6px", cursor: "pointer" }}
             className="show-mobile"
-            aria-label="Toggle menu"
+            aria-label={menuOpen ? (locale === "ro" ? "Închide meniu" : "Close menu") : (locale === "ro" ? "Deschide meniu" : "Open menu")}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-drawer"
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -325,7 +378,7 @@ export default function Header() {
 
       {/* Mobile drawer */}
       {menuOpen && (
-        <div className="mobile-drawer" style={{ background: "rgba(9,9,26,0.97)", backdropFilter: "blur(20px)", borderTop: "1px solid rgba(139,92,246,0.15)", padding: "16px 28px 24px" }}>
+        <div id="mobile-drawer" className="mobile-drawer" style={{ background: "rgba(9,9,26,0.97)", backdropFilter: "blur(20px)", borderTop: "1px solid rgba(139,92,246,0.15)", padding: "16px 28px 24px" }}>
           <Link href={`/${locale}`} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "12px 0", fontSize: "16px", fontWeight: 500, fontFamily: "Rubik, sans-serif", color: pathname === `/${locale}` ? "var(--primary-light)" : "var(--color-foreground)", textDecoration: "none", borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
             {t("home")}
           </Link>

@@ -134,7 +134,7 @@ export default function ToolPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
       <Header />
-      <main className="tool-main" style={{ flex: 1, maxWidth: "900px", margin: "0 auto", width: "100%", padding: "80px 20px 60px" }}>
+      <main id="main-content" className="tool-main" style={{ flex: 1, maxWidth: "900px", margin: "0 auto", width: "100%", padding: "80px 20px 60px" }}>
         <div style={{ marginBottom: "36px" }}>
           <h1 style={{ fontFamily: "Rubik, sans-serif", fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: "8px" }}>
             {t("title")}
@@ -148,13 +148,13 @@ export default function ToolPage() {
             <UploadZone files={files} onChange={setFiles} recommendedIndex={recommendedIndex} />
 
             {/* Platform */}
-            <div>
-              <label style={{ display: "block", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "10px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            <div role="group" aria-labelledby="platform-group-label">
+              <p id="platform-group-label" style={{ display: "block", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "10px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {t("platform_label")}
-              </label>
+              </p>
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 {platforms.map(({ key, label }) => (
-                  <button key={key} onClick={() => setPlatform(key)} style={btnToggle(platform === key)}>
+                  <button key={key} type="button" aria-pressed={platform === key} onClick={() => setPlatform(key)} style={btnToggle(platform === key)}>
                     {label}
                   </button>
                 ))}
@@ -163,16 +163,16 @@ export default function ToolPage() {
 
             {/* Vinted type — only shown for Vinted/Both */}
             {showVintedType && (
-              <div style={{ padding: "16px", borderRadius: "14px", background: "rgba(212,153,26,0.04)", border: "1px solid rgba(212,153,26,0.14)" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "10px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              <div role="group" aria-labelledby="vinted-type-label" style={{ padding: "16px", borderRadius: "14px", background: "rgba(212,153,26,0.04)", border: "1px solid rgba(212,153,26,0.14)" }}>
+                <p id="vinted-type-label" style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "10px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                   <ShieldCheck size={13} color="var(--primary-light)" />
                   {locale === "ro" ? "Tip produs (Vinted)" : "Product type (Vinted)"}
-                </label>
+                </p>
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => setVintedType("original")} style={btnToggle(vintedType === "original")}>
+                  <button type="button" aria-pressed={vintedType === "original"} onClick={() => setVintedType("original")} style={btnToggle(vintedType === "original")}>
                     {locale === "ro" ? "Original / Autentic" : "Original / Authentic"}
                   </button>
-                  <button onClick={() => setVintedType("replica")} style={{ ...btnToggle(vintedType === "replica"), borderColor: vintedType === "replica" ? "rgba(239,68,68,0.5)" : "rgba(255,255,255,0.09)", background: vintedType === "replica" ? "rgba(239,68,68,0.1)" : "rgba(13,13,34,0.5)", color: vintedType === "replica" ? "#EF4444" : "var(--color-muted-foreground)", boxShadow: vintedType === "replica" ? "0 0 0 3px rgba(239,68,68,0.08)" : "none" }}>
+                  <button type="button" aria-pressed={vintedType === "replica"} onClick={() => setVintedType("replica")} style={{ ...btnToggle(vintedType === "replica"), borderColor: vintedType === "replica" ? "rgba(239,68,68,0.5)" : "rgba(255,255,255,0.09)", background: vintedType === "replica" ? "rgba(239,68,68,0.1)" : "rgba(13,13,34,0.5)", color: vintedType === "replica" ? "#EF4444" : "var(--color-muted-foreground)", boxShadow: vintedType === "replica" ? "0 0 0 3px rgba(239,68,68,0.08)" : "none" }}>
                     Replica / Rep
                   </button>
                 </div>
@@ -185,13 +185,13 @@ export default function ToolPage() {
             )}
 
             {/* Language */}
-            <div>
-              <label style={{ display: "block", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "10px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            <div role="group" aria-labelledby="language-group-label">
+              <p id="language-group-label" style={{ display: "block", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "10px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {t("language_label")}
-              </label>
+              </p>
               <div style={{ display: "flex", gap: "8px" }}>
                 {languages.map(({ key, label }) => (
-                  <button key={key} onClick={() => setLanguage(key)} style={btnToggle(language === key)}>
+                  <button key={key} type="button" aria-pressed={language === key} onClick={() => setLanguage(key)} style={btnToggle(language === key)}>
                     {label}
                   </button>
                 ))}
@@ -200,10 +200,11 @@ export default function ToolPage() {
 
             {/* Description */}
             <div>
-              <label style={{ display: "block", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "8px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              <label htmlFor="tool-description" style={{ display: "block", fontSize: "12px", fontWeight: 700, fontFamily: "Rubik, sans-serif", marginBottom: "8px", color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {t("description_label")}
               </label>
               <textarea
+                id="tool-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder={t("description_placeholder")}
@@ -219,7 +220,7 @@ export default function ToolPage() {
             </div>
 
             {error && (
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: "12px", padding: "12px 16px" }}>
+              <div role="alert" aria-live="assertive" style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: "12px", padding: "12px 16px" }}>
                 <AlertCircle size={16} color="#DC2626" />
                 <span style={{ fontSize: "14px", color: "#DC2626" }}>{error}</span>
               </div>

@@ -8,27 +8,47 @@ function getClient() {
   return new GoogleGenerativeAI(apiKey);
 }
 
+async function withRetry<T>(fn: () => Promise<T>, attempts = 2): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      const message = err instanceof Error ? err.message : String(err);
+      const isTransient = message.includes("fetch") || message.includes("network") || message.includes("ECONNRESET") || message.includes("timeout") || message.includes("503") || message.includes("overloaded");
+      if (!isTransient || i === attempts - 1) break;
+      await new Promise((r) => setTimeout(r, 800 * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
+
 async function generateText(prompt: string, systemInstruction?: string, maxTokens = 1000, temperature = 0.3): Promise<string> {
-  const model = getClient().getGenerativeModel({
-    model: MODEL,
-    systemInstruction: systemInstruction ?? undefined,
-    generationConfig: { maxOutputTokens: maxTokens, temperature },
+  return withRetry(async () => {
+    const model = getClient().getGenerativeModel({
+      model: MODEL,
+      systemInstruction: systemInstruction ?? undefined,
+      generationConfig: { maxOutputTokens: maxTokens, temperature },
+    });
+    const result = await model.generateContent(prompt, { timeout: 25_000 });
+    return result.response.text();
   });
-  const result = await model.generateContent(prompt);
-  return result.response.text();
 }
 
 async function generateWithImages(images: { data: string; mediaType: string }[], prompt: string, maxTokens = 3000, temperature = 0.3): Promise<string> {
-  const model = getClient().getGenerativeModel({
-    model: MODEL,
-    generationConfig: { maxOutputTokens: maxTokens, temperature },
+  return withRetry(async () => {
+    const model = getClient().getGenerativeModel({
+      model: MODEL,
+      generationConfig: { maxOutputTokens: maxTokens, temperature },
+    });
+    const parts = [
+      ...images.map(img => ({ inlineData: { data: img.data, mimeType: img.mediaType } })),
+      { text: prompt },
+    ];
+    const result = await model.generateContent(parts, { timeout: 45_000 });
+    return result.response.text();
   });
-  const parts = [
-    ...images.map(img => ({ inlineData: { data: img.data, mimeType: img.mediaType } })),
-    { text: prompt },
-  ];
-  const result = await model.generateContent(parts);
-  return result.response.text();
 }
 
 export interface PhotoScore {

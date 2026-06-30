@@ -183,7 +183,7 @@ export default function DashboardPage() {
                       <h3 className="listing-title" style={{ fontFamily: "Rubik, sans-serif", fontWeight: 600, fontSize: "15px", marginBottom: "6px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {listing.title}
                       </h3>
-                      <p style={{ fontSize: "13px", color: "var(--color-muted-foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: "10px" }}>
+                      <p style={{ fontSize: "13px", color: "var(--color-muted-foreground)", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", marginBottom: "10px" }}>
                         {listing.description}
                       </p>
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
@@ -202,7 +202,7 @@ export default function DashboardPage() {
                       onClick={() => handleDelete(listing.id)}
                       disabled={deleting === listing.id}
                       aria-label={t("delete")}
-                      style={{ padding: "8px", borderRadius: "8px", border: "1px solid var(--color-border)", background: "white", cursor: "pointer", color: deleting === listing.id ? "var(--color-muted-foreground)" : "#DC2626", transition: "all 0.15s", flexShrink: 0 }}
+                      style={{ padding: "8px", borderRadius: "8px", border: "1px solid var(--color-border)", background: "transparent", cursor: "pointer", color: deleting === listing.id ? "var(--color-muted-foreground)" : "#DC2626", transition: "all 0.15s", flexShrink: 0 }}
                     >
                       <Trash2 size={15} />
                     </button>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,12 +11,26 @@ export default function SignupPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
   const router = useRouter();
+  const { status } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [terms, setTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated") router.push(`/${locale}/tool`);
+  }, [status, locale, router]);
+
+  if (status === "loading" || status === "authenticated") {
+    return (
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg)" }}>
+        <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "3px solid rgba(212,153,26,0.2)", borderTopColor: "var(--primary-light)", animation: "spin 0.8s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,7 +65,7 @@ export default function SignupPage() {
     : ["1 free listing per day", "No credit card needed", "Cancel anytime"];
 
   return (
-    <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", background: "var(--bg)" }}>
+    <main id="main-content" style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", background: "var(--bg)" }}>
       <div style={{ width: "100%", maxWidth: "420px" }}>
         <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "32px", textDecoration: "none" }}>
           <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px var(--primary-glow)" }}>
@@ -80,7 +94,7 @@ export default function SignupPage() {
           </div>
 
           {error && (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "10px", padding: "10px 14px", marginBottom: "16px" }}>
+            <div role="alert" aria-live="assertive" style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "10px", padding: "10px 14px", marginBottom: "16px" }}>
               <AlertCircle size={15} color="var(--danger)" />
               <span style={{ fontSize: "13px", color: "var(--danger)" }}>{error}</span>
             </div>
@@ -88,26 +102,26 @@ export default function SignupPage() {
 
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             <div>
-              <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("name")}</label>
+              <label htmlFor="signup-name" style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("name")}</label>
               <div style={{ position: "relative" }}>
                 <User size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required autoComplete="name" placeholder={locale === "ro" ? "Ion Popescu" : "John Doe"} style={{ paddingLeft: "36px" }} />
+                <input id="signup-name" type="text" value={name} onChange={(e) => setName(e.target.value)} required autoComplete="name" placeholder={locale === "ro" ? "Ion Popescu" : "John Doe"} style={{ paddingLeft: "36px" }} />
               </div>
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("email")}</label>
+              <label htmlFor="signup-email" style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("email")}</label>
               <div style={{ position: "relative" }}>
                 <Mail size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="exemplu@email.com" style={{ paddingLeft: "36px" }} />
+                <input id="signup-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="exemplu@email.com" style={{ paddingLeft: "36px" }} />
               </div>
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("password")}</label>
+              <label htmlFor="signup-password" style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("password")}</label>
               <div style={{ position: "relative" }}>
                 <Lock size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" minLength={8} placeholder="••••••••" style={{ paddingLeft: "36px" }} />
+                <input id="signup-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" minLength={8} placeholder="••••••••" style={{ paddingLeft: "36px" }} />
               </div>
               <p style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px" }}>
                 {locale === "ro" ? "Minimum 8 caractere" : "Minimum 8 characters"}
@@ -136,10 +150,11 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading || !terms}
+              aria-busy={loading}
               className="btn-primary"
               style={{ width: "100%", justifyContent: "center", padding: "13px", fontSize: "15px", marginTop: "4px", opacity: loading || !terms ? 0.6 : 1 }}
             >
-              {loading ? "..." : t("signup_btn")}
+              {loading ? (locale === "ro" ? "Se procesează..." : "Processing...") : t("signup_btn")}
             </button>
           </form>
 
@@ -151,6 +166,6 @@ export default function SignupPage() {
           </p>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

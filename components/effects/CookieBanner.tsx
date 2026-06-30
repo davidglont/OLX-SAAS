@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const STORAGE_KEY = "anuntai_cookie_consent";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const acceptButtonRef = useRef<HTMLButtonElement>(null);
   const locale = typeof window !== "undefined"
     ? window.location.pathname.startsWith("/en") ? "en" : "ro"
     : "ro";
@@ -17,6 +19,28 @@ export default function CookieBanner() {
       return () => clearTimeout(timer);
     }
   }, []);
+
+  useEffect(() => {
+    if (visible) acceptButtonRef.current?.focus();
+  }, [visible]);
+
+  useEffect(() => {
+    if (!visible) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") { decline(); return; }
+      if (e.key !== "Tab") return;
+      const el = dialogRef.current;
+      if (!el) return;
+      const focusable = Array.from(el.querySelectorAll<HTMLElement>("button, a[href]"));
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [visible]);
 
   function accept() {
     localStorage.setItem(STORAGE_KEY, "accepted");
@@ -35,9 +59,12 @@ export default function CookieBanner() {
   return (
     <>
       <div
+        ref={dialogRef}
         role="dialog"
+        aria-modal="true"
         aria-live="polite"
         aria-label={isRo ? "Consimțământ cookie-uri" : "Cookie consent"}
+        tabIndex={-1}
         style={{
           position: "fixed",
           bottom: "20px",
@@ -84,6 +111,7 @@ export default function CookieBanner() {
         {/* Buttons */}
         <div style={{ display: "flex", gap: "8px" }}>
           <button
+            ref={acceptButtonRef}
             onClick={accept}
             className="btn-primary"
             style={{ flex: 1, justifyContent: "center", padding: "10px 16px", fontSize: "13px", borderRadius: "10px" }}

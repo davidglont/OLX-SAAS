@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "davidglodean575@gmail.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 const schema = z.object({
   name: z.string().min(2).max(100),
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const isAdmin = email === ADMIN_EMAIL.toLowerCase();
+    const isAdmin = !!ADMIN_EMAIL && email === ADMIN_EMAIL.toLowerCase();
 
     await prisma.user.create({
       data: {

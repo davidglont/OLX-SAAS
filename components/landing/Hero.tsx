@@ -18,6 +18,7 @@ export default function Hero() {
   const cardRef   = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
@@ -69,7 +70,7 @@ export default function Hero() {
               <Zap size={11} color="var(--primary-light)" fill="var(--primary-light)" />
               <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", fontFamily: "Rubik,sans-serif", letterSpacing: "0.06em" }}>AI</span>
             </div>
-            <span className="hero-live-dot" />
+            <span className="hero-live-dot" aria-hidden="true" />
             <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)" }}>{t("badge")}</span>
           </div>
 

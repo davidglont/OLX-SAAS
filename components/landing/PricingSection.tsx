@@ -66,6 +66,7 @@ export default function PricingSection() {
   const cardsRef   = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(headRef.current,
         { opacity: 0, y: 40 },

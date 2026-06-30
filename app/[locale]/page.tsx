@@ -12,7 +12,7 @@ export default function LandingPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
       <Header />
-      <main style={{ flex: 1 }}>
+      <main id="main-content" style={{ flex: 1 }}>
         <Hero />
         <HowItWorks />
         <BeforeAfter />

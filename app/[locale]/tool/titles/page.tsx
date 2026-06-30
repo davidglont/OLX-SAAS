@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -26,10 +26,20 @@ export default function TitlesToolPage() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState<number | null>(null);
 
-  if (status === "loading") return null;
-  if (!session) { router.push(`/${locale}/auth/login`); return null; }
+  useEffect(() => {
+    if (status === "unauthenticated") router.push(`/${locale}/auth/login`);
+  }, [status, locale, router]);
 
-  const userPlan = (session.user as { plan?: string })?.plan ?? "free";
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-background)" }}>
+        <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "3px solid rgba(212,153,26,0.2)", borderTopColor: "var(--primary-light)", animation: "spin 0.8s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  const userPlan = (session!.user as { plan?: string })?.plan ?? "free";
   if (userPlan === "free") {
     return (
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
@@ -80,7 +90,7 @@ export default function TitlesToolPage() {
   }
 
   const btnBase: React.CSSProperties = {
-    padding: "9px 20px",
+    padding: "12px 20px",
     borderRadius: "10px",
     fontSize: "13px",
     fontWeight: 600,
@@ -127,7 +137,7 @@ export default function TitlesToolPage() {
               placeholder={isRo
                 ? "Ex: iPhone 13 Pro 128GB graphite, stare buna, baterie 89%, cutie originala..."
                 : "Ex: iPhone 13 Pro 128GB graphite, good condition, 89% battery, original box..."}
-              style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "14px", fontFamily: "Nunito Sans, sans-serif", lineHeight: 1.6, resize: "vertical", outline: "none", boxSizing: "border-box" }}
+              style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "16px", fontFamily: "Nunito Sans, sans-serif", lineHeight: 1.6, resize: "vertical", outline: "none", boxSizing: "border-box" }}
             />
             <p style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px", textAlign: "right" }}>
               {description.length}/300
@@ -135,10 +145,10 @@ export default function TitlesToolPage() {
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "10px" }}>
+            <p id="titles-platform-label" style={{ fontSize: "13px", fontWeight: 700, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "10px" }}>
               {isRo ? "Platforma" : "Platform"}
-            </label>
-            <div style={{ display: "flex", gap: "8px" }}>
+            </p>
+            <div role="group" aria-labelledby="titles-platform-label" style={{ display: "flex", gap: "8px" }}>
               {[
                 { key: "olx", label: "OLX" },
                 { key: "vinted", label: "Vinted" },
@@ -147,6 +157,7 @@ export default function TitlesToolPage() {
                 <button
                   key={p.key}
                   type="button"
+                  aria-pressed={platform === p.key}
                   onClick={() => setPlatform(p.key)}
                   style={{ ...btnBase, borderColor: platform === p.key ? "rgba(212,153,26,0.55)" : "rgba(255,255,255,0.1)", background: platform === p.key ? "rgba(212,153,26,0.12)" : "rgba(13,13,34,0.5)", color: platform === p.key ? "var(--primary-light)" : "var(--color-muted-foreground)", boxShadow: platform === p.key ? "0 0 0 3px rgba(212,153,26,0.1)" : "none" }}
                 >
@@ -157,10 +168,10 @@ export default function TitlesToolPage() {
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "10px" }}>
+            <p id="titles-language-label" style={{ fontSize: "13px", fontWeight: 700, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "10px" }}>
               {isRo ? "Limba continut generat" : "Generated content language"}
-            </label>
-            <div style={{ display: "flex", gap: "8px" }}>
+            </p>
+            <div role="group" aria-labelledby="titles-language-label" style={{ display: "flex", gap: "8px" }}>
               {([
                 { key: "ro" as Language, label: isRo ? "Romana" : "Romanian" },
                 { key: "en" as Language, label: isRo ? "Engleza" : "English" },
@@ -168,6 +179,7 @@ export default function TitlesToolPage() {
                 <button
                   key={l.key}
                   type="button"
+                  aria-pressed={language === l.key}
                   onClick={() => setLanguage(l.key)}
                   style={{ ...btnBase, borderColor: language === l.key ? "rgba(212,153,26,0.55)" : "rgba(255,255,255,0.1)", background: language === l.key ? "rgba(212,153,26,0.12)" : "rgba(13,13,34,0.5)", color: language === l.key ? "var(--primary-light)" : "var(--color-muted-foreground)", boxShadow: language === l.key ? "0 0 0 3px rgba(212,153,26,0.1)" : "none" }}
                 >

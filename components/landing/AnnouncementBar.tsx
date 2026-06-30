@@ -52,7 +52,7 @@ export default function AnnouncementBar() {
       </div>
       <button
         onClick={() => setDismissed(true)}
-        style={{ position: "absolute", right: "16px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(245,236,215,0.45)", display: "flex", alignItems: "center", padding: "6px" }}
+        style={{ position: "absolute", right: "16px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(245,236,215,0.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: "12px" }}
         aria-label="Închide"
       >
         <X size={14} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import type { ListingCheck } from "@/lib/ai";
 function ScoreBar({ score, color }: { score: number; color: string }) {
   return (
     <div style={{ position: "relative", height: "8px", borderRadius: "4px", background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-      <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: "100%", background: color, borderRadius: "4px", transform: `scaleX(${score * 0.1})`, transformOrigin: "left", transition: "transform 0.8s ease" }} />
+      <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: "100%", background: color, borderRadius: "4px", transform: `scaleX(${Math.min(Math.max(score, 0), 10) * 0.1})`, transformOrigin: "left", transition: "transform 0.8s ease" }} />
     </div>
   );
 }
@@ -21,8 +21,8 @@ function ScoreBar({ score, color }: { score: number; color: string }) {
 function ScoreCircle({ score }: { score: number }) {
   const color = score >= 8 ? "#10B981" : score >= 6 ? "#F0B429" : "#EF4444";
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "72px", height: "72px", borderRadius: "50%", border: `3px solid ${color}`, background: `${color}12` }}>
-      <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 800, fontSize: "22px", color }}>{score}</span>
+    <div role="img" aria-label={`${score}/10`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "72px", height: "72px", borderRadius: "50%", border: `3px solid ${color}`, background: `${color}12` }}>
+      <span aria-hidden="true" style={{ fontFamily: "Rubik, sans-serif", fontWeight: 800, fontSize: "22px", color }}>{score}</span>
     </div>
   );
 }
@@ -40,10 +40,20 @@ export default function CheckToolPage() {
   const [result, setResult] = useState<ListingCheck | null>(null);
   const [error, setError] = useState("");
 
-  if (status === "loading") return null;
-  if (!session) { router.push(`/${locale}/auth/login`); return null; }
+  useEffect(() => {
+    if (status === "unauthenticated") router.push(`/${locale}/auth/login`);
+  }, [status, locale, router]);
 
-  const userPlan = (session.user as { plan?: string })?.plan ?? "free";
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-background)" }}>
+        <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "3px solid rgba(212,153,26,0.2)", borderTopColor: "var(--primary-light)", animation: "spin 0.8s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  const userPlan = (session!.user as { plan?: string })?.plan ?? "free";
   if (userPlan === "free") {
     return (
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
@@ -123,7 +133,7 @@ export default function CheckToolPage() {
               minLength={3}
               maxLength={200}
               placeholder={isRo ? "Ex: Vand iPhone 13 Pro stare buna" : "Ex: Selling iPhone 13 Pro good condition"}
-              style={{ width: "100%", padding: "11px 14px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "14px", fontFamily: "Nunito Sans, sans-serif", outline: "none", boxSizing: "border-box" }}
+              style={{ width: "100%", padding: "11px 14px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "16px", fontFamily: "Nunito Sans, sans-serif", outline: "none", boxSizing: "border-box" }}
             />
           </div>
 
@@ -139,15 +149,15 @@ export default function CheckToolPage() {
               maxLength={1000}
               rows={5}
               placeholder={isRo ? "Lipeste descrierea completa a anuntului tau..." : "Paste the full description of your listing..."}
-              style={{ width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "14px", fontFamily: "Nunito Sans, sans-serif", lineHeight: 1.6, resize: "vertical", outline: "none", boxSizing: "border-box" }}
+              style={{ width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "16px", fontFamily: "Nunito Sans, sans-serif", lineHeight: 1.6, resize: "vertical", outline: "none", boxSizing: "border-box" }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
+            <p id="check-platform-label" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
               {isRo ? "Platforma" : "Platform"}
-            </label>
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            </p>
+            <div role="group" aria-labelledby="check-platform-label" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               {[
                 { key: "olx", label: "OLX" },
                 { key: "vinted", label: "Vinted" },
@@ -156,8 +166,9 @@ export default function CheckToolPage() {
                 <button
                   key={p.key}
                   type="button"
+                  aria-pressed={platform === p.key}
                   onClick={() => setPlatform(p.key)}
-                  style={{ padding: "8px 18px", borderRadius: "10px", border: `1px solid ${platform === p.key ? "rgba(16,185,129,0.5)" : "rgba(255,255,255,0.1)"}`, background: platform === p.key ? "rgba(16,185,129,0.1)" : "transparent", color: platform === p.key ? "#10B981" : "var(--color-muted-foreground)", fontSize: "13px", fontWeight: 600, fontFamily: "Rubik, sans-serif", cursor: "pointer", transition: "all 0.2s" }}
+                  style={{ padding: "10px 18px", borderRadius: "10px", border: `1px solid ${platform === p.key ? "rgba(16,185,129,0.5)" : "rgba(255,255,255,0.1)"}`, background: platform === p.key ? "rgba(16,185,129,0.1)" : "transparent", color: platform === p.key ? "#10B981" : "var(--color-muted-foreground)", fontSize: "13px", fontWeight: 600, fontFamily: "Rubik, sans-serif", cursor: "pointer", transition: "all 0.2s" }}
                 >
                   {p.label}
                 </button>

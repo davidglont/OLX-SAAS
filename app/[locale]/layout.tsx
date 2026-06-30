@@ -104,6 +104,9 @@ export default async function LocaleLayout({
         />
       </head>
       <body>
+        <a href="#main-content" className="skip-link">
+          {isRo ? "Sari la conținut" : "Skip to main content"}
+        </a>
         <Providers>
           <NextIntlClientProvider messages={messages}>
             {children}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -46,19 +46,26 @@ export default function PriceToolPage() {
   const [result, setResult] = useState<PriceEstimate | null>(null);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (status === "unauthenticated") router.push(`/${locale}/auth/login`);
+  }, [status, locale, router]);
+
   const EUR_RATE = 5.0;
   function displayPrice(ron: number) {
     if (currency === "EUR") return `€${Math.round(ron / EUR_RATE)}`;
     return `RON ${ron}`;
   }
 
-  if (status === "loading") return null;
-  if (!session) {
-    router.push(`/${locale}/auth/login`);
-    return null;
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-background)" }}>
+        <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "3px solid rgba(212,153,26,0.2)", borderTopColor: "var(--primary-light)", animation: "spin 0.8s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
   }
 
-  const userPlan = (session.user as { plan?: string })?.plan ?? "free";
+  const userPlan = (session!.user as { plan?: string })?.plan ?? "free";
   const isLocked = userPlan === "free";
 
   if (isLocked) {
@@ -135,8 +142,8 @@ export default function PriceToolPage() {
             {isRo ? "Afișează în:" : "Show in:"}
           </span>
           {(["RON", "EUR"] as const).map((c) => (
-            <button key={c} type="button" onClick={() => setCurrency(c)}
-              style={{ padding: "5px 14px", borderRadius: "8px", border: `1px solid ${currency === c ? "rgba(212,153,26,0.5)" : "rgba(255,255,255,0.1)"}`, background: currency === c ? "rgba(212,153,26,0.12)" : "transparent", color: currency === c ? "var(--primary-light)" : "var(--color-muted-foreground)", fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>
+            <button key={c} type="button" aria-pressed={currency === c} onClick={() => setCurrency(c)}
+              style={{ padding: "10px 14px", borderRadius: "8px", border: `1px solid ${currency === c ? "rgba(212,153,26,0.5)" : "rgba(255,255,255,0.1)"}`, background: currency === c ? "rgba(212,153,26,0.12)" : "transparent", color: currency === c ? "var(--primary-light)" : "var(--color-muted-foreground)", fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>
               {c}
             </button>
           ))}
@@ -157,7 +164,7 @@ export default function PriceToolPage() {
               placeholder={isRo
                 ? "Ex: iPhone 13 Pro 128GB, culoare grafit, baterie 89%, cutie originala, cablu si incarcator incluse, fara zgarieturi..."
                 : "Ex: iPhone 13 Pro 128GB, graphite color, 89% battery, original box, cable and charger included, no scratches..."}
-              style={{ width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "14px", fontFamily: "Nunito Sans, sans-serif", lineHeight: 1.6, resize: "vertical", outline: "none", boxSizing: "border-box" }}
+              style={{ width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.6)", color: "var(--color-foreground)", fontSize: "16px", fontFamily: "Nunito Sans, sans-serif", lineHeight: 1.6, resize: "vertical", outline: "none", boxSizing: "border-box" }}
             />
             <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px", textAlign: "right" }}>{description.length}/500</div>
           </div>
@@ -167,7 +174,7 @@ export default function PriceToolPage() {
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
                 {isRo ? "Categorie" : "Category"}
               </label>
-              <select value={category} onChange={e => setCategory(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}>
+              <select value={category} onChange={e => setCategory(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "16px", outline: "none" }}>
                 <option value="">{isRo ? "Selecteaza..." : "Select..."}</option>
                 {categories.map(c => <option key={c.ro} value={isRo ? c.ro : c.en}>{isRo ? c.ro : c.en}</option>)}
               </select>
@@ -176,7 +183,7 @@ export default function PriceToolPage() {
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
                 {isRo ? "Stare" : "Condition"}
               </label>
-              <select value={condition} onChange={e => setCondition(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}>
+              <select value={condition} onChange={e => setCondition(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "16px", outline: "none" }}>
                 <option value="">{isRo ? "Selecteaza..." : "Select..."}</option>
                 {conditions.map(c => <option key={c.ro} value={isRo ? c.ro : c.en}>{isRo ? c.ro : c.en}</option>)}
               </select>
@@ -185,7 +192,7 @@ export default function PriceToolPage() {
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)", fontFamily: "Rubik, sans-serif", marginBottom: "8px" }}>
                 {isRo ? "Tip produs" : "Product type"}
               </label>
-              <select value={productType} onChange={e => setProductType(e.target.value as "" | "original" | "replica")} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "14px", outline: "none" }}>
+              <select value={productType} onChange={e => setProductType(e.target.value as "" | "original" | "replica")} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(212,153,26,0.2)", background: "rgba(13,13,34,0.8)", color: "var(--color-foreground)", fontSize: "16px", outline: "none" }}>
                 <option value="">{isRo ? "Necunoscut" : "Unknown"}</option>
                 <option value="original">{isRo ? "Original / Autentic" : "Original / Authentic"}</option>
                 <option value="replica">{isRo ? "Replica / Rep" : "Replica / Rep"}</option>
