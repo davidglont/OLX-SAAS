@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import gsap from "gsap";
-import { ArrowRight, Star, Zap } from "lucide-react";
+import { ArrowRight, Star, Zap, CheckCircle } from "lucide-react";
 
 function getActiveSellers(locale: string): string {
   const START = new Date("2026-07-01").getTime();
@@ -130,6 +130,15 @@ export default function Hero() {
 
         {/* ── Right — product preview card ─────────────────────── */}
         <div ref={cardRef} className="hero-preview" style={{ position: "relative", perspective: "1000px" }}>
+          <div className="glass-card" style={{ position: "absolute", bottom: "-18px", right: "-24px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
+            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#10B981,#059669)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <CheckCircle size={17} color="white" />
+            </div>
+            <div>
+              <div style={{ fontSize: "12px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>Salvat!</div>
+              <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)" }}>OLX + Vinted</div>
+            </div>
+          </div>
           <div className="glass-card" style={{ padding: "24px", boxShadow: "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,153,26,0.18)" }}>
             {/* Topbar */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", paddingBottom: "14px", borderBottom: "1px solid rgba(212,153,26,0.1)" }}>
