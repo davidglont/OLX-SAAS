@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Zap, TrendingUp, Clock, Star, ArrowRight } from "lucide-react";
+import { Zap, TrendingUp, Clock, Star, ArrowRight, ArrowLeft } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -163,14 +163,20 @@ export default async function CaseStudiesPage({ params }: { params: Promise<{ lo
   return (
     <div style={{ minHeight: "100dvh", background: "var(--bg)" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "60px 24px 80px" }}>
-        <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginBottom: "48px", textDecoration: "none" }}>
-          <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Zap size={16} color="white" fill="white" />
-          </div>
-          <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "17px", color: "var(--color-foreground)" }}>
-            Anunț<span style={{ color: "var(--primary-light)" }}>AI</span>
-          </span>
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "48px", flexWrap: "wrap", gap: "12px" }}>
+          <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "var(--color-muted-foreground)", fontSize: "14px", fontWeight: 500, padding: "8px 14px", borderRadius: "10px", border: "1px solid var(--color-border)", background: "rgba(255,255,255,0.03)" }}>
+            <ArrowLeft size={15} />
+            {isRo ? "Acasă" : "Home"}
+          </Link>
+          <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
+            <div style={{ width: "28px", height: "28px", borderRadius: "8px", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Zap size={14} color="white" fill="white" />
+            </div>
+            <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "16px", color: "var(--color-foreground)" }}>
+              Anunț<span style={{ color: "var(--primary-light)" }}>AI</span>
+            </span>
+          </Link>
+        </div>
 
         <div style={{ marginBottom: "56px" }}>
           <div style={{ display: "inline-block", background: "rgba(212,153,26,0.1)", border: "1px solid rgba(212,153,26,0.25)", borderRadius: "100px", padding: "6px 16px", marginBottom: "20px" }}>

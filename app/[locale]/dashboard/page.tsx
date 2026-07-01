@@ -81,7 +81,7 @@ export default function DashboardPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
       <Header />
-      <main className="tool-main dashboard-main" style={{ flex: 1, maxWidth: "1000px", margin: "0 auto", width: "100%", padding: "40px 24px" }}>
+      <main className="tool-main dashboard-main" style={{ flex: 1, maxWidth: "1000px", margin: "0 auto", width: "100%", padding: "80px 24px 60px" }}>
         {/* Header row */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px", marginBottom: "32px" }}>
           <div>
