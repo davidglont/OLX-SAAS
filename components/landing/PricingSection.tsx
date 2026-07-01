@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Check, Zap, Star, Shield } from "lucide-react";
+import { Check, Zap, Star } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -237,14 +237,6 @@ export default function PricingSection() {
                 {loading === plan.key ? t("processing") : plan.price === 0 ? t("cta_free") : t("cta_paid")}
               </button>
 
-              {plan.price > 0 && (
-                <div style={{ textAlign: "center", marginBottom: "18px" }}>
-                  <span style={{ fontSize: "11px", color: "var(--color-muted-foreground)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                    <Shield size={10} color="var(--color-muted-foreground)" />
-                    {t("guarantee")}
-                  </span>
-                </div>
-              )}
 
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>

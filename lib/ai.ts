@@ -283,10 +283,17 @@ The justification MUST state it is a replica, explain the heavy discount reflect
 - Jordan 4 original nou=900-1400 RON | Jordan 4 second-hand=600-1000 RON
 - Nike SB Dunk original=700-2500 RON | Adidas Yeezy=800-2500 RON
 - Sneakers Nike/Adidas original nou=400-1200 RON
-- Louis Vuitton second-hand=1500-4000 RON | Gucci second-hand=1200-3500 RON
+- Louis Vuitton geanta second-hand=1500-4000 RON | LV portofel/accesoriu=800-2500 RON | Gucci=1200-3500 RON
 - Ceasuri luxury authentic: pret de revanzare de piata
+REGULA: NU aplica reducere de replica. Pretul MINIM pentru un articol luxury original este de cel putin 800 RON.
 Subliniaza in justificare valoarea autenticitatii si de ce produsul original comanda un pret premium fata de replica.`
-      : `You are a Romanian second-hand market expert. This is an AUTHENTIC/ORIGINAL product with verifiable provenance. Price it at FULL authentic market value. The justification must emphasize the authenticity premium and explain why buyers pay significantly more for an original versus a replica.`)
+      : `You are a Romanian second-hand market expert. This is an AUTHENTIC/ORIGINAL product with verifiable provenance. Price it at FULL authentic market value. Reference prices (RON):
+- Louis Vuitton bag second-hand=1500-4000 RON | LV wallet/accessory=800-2500 RON
+- Gucci bag second-hand=1200-3500 RON | Gucci wallet=700-2000 RON
+- Jordan 4 original=600-1400 RON | Nike SB Dunk=700-2500 RON | Yeezy=800-2500 RON
+- iPhone 14 Pro=3000-3800 RON | iPhone 13=1800-2500 RON | MacBook Air M2=4000-5500 RON
+RULE: Do NOT apply any replica discount. Minimum price for an authentic luxury item is 700 RON.
+Emphasize the authenticity premium in your justification.`)
     : (isRo
       ? `Esti expert in preturi pe piata second-hand din Romania (OLX, Vinted, Facebook Marketplace). Tipul produsului nu a fost specificat (original sau replica). Ofera un interval de pret care acopera ambele scenarii: pretul minim sa reflecte varianta replica (20-40% din valoarea originalului), pretul maxim sa reflecte varianta originala autentica. Mentioneaza in justificare ca pretul variaza semnificativ in functie de autenticitate.`
       : `You are a Romanian second-hand market pricing expert. The product type (original vs replica) was not specified. Provide a price range that covers both scenarios: the minimum should reflect replica pricing (20-40% of authentic value), the maximum should reflect authentic original pricing. The justification must note that price varies significantly based on authenticity.`);
@@ -299,14 +306,29 @@ Console: PS5 nou=2200-2500 RON | PS5 second=1700-2100 RON | Nintendo Switch=1400
 Electronice: AirPods Pro 2=700-1000 RON | iPad Air=2000-3000 RON | Apple Watch S9=1500-2200 RON
 Sneakers ORIGINAL: Jordan 4=900-1400 RON nou | Nike SB Dunk=700-2500 RON | Yeezy=800-2500 RON | Nike/Adidas clasic=300-800 RON
 Sneakers REPLICA: Jordan/Nike/Adidas replica=150-350 RON (OBLIGATORIU 20-40% din pretul originalului second-hand)
-Genti luxury ORIGINAL second: Louis Vuitton=1500-4000 RON | Gucci=1200-3500 RON
-Genti luxury REPLICA: LV replica=200-500 RON | Gucci replica=150-400 RON
+Genti & Accesorii luxury ORIGINAL second-hand: Louis Vuitton geanta=1500-4000 RON | LV portofel/accesoriu=800-2500 RON | Gucci geanta=1200-3500 RON | Gucci portofel=700-2000 RON
+Genti & Accesorii luxury REPLICA: LV replica geanta=200-500 RON | LV replica portofel=100-250 RON | Gucci replica=150-400 RON
 
 REGULI FUNDAMENTALE:
 - Second-hand ORIGINAL = 50-70% din pretul de nou
 - Tine cont de stare: nou=100%, ca nou=85%, buna=70%, acceptabila=55%
 - Replica = INTOTDEAUNA 20-40% din pretul originalului second-hand echivalent (NU din pretul de nou)
-- Diferenta de pret intre replica si original trebuie sa fie SEMNIFICATIVA (de 3-5x)` : "";
+- Diferenta de pret intre replica si original trebuie sa fie SEMNIFICATIVA (de 3-5x)` : `
+ROMANIAN SECOND-HAND MARKET CALIBRATION 2025 (all prices in RON, 1 EUR ≈ 5 RON):
+Phones: iPhone 16 Pro Max=5500-6500 | iPhone 15 Pro Max=4200-5000 | iPhone 14 Pro=3000-3800 | iPhone 13=1800-2500 | Samsung S25 Ultra=4500-5500
+Laptops: MacBook Air M2=4000-5500 | MacBook Pro M3=7000-10000 | Gaming laptop=2500-4500
+Consoles: PS5 new=2200-2500 | PS5 used=1700-2100 | Nintendo Switch=1400-1800
+Electronics: AirPods Pro 2=700-1000 | iPad Air=2000-3000 | Apple Watch S9=1500-2200
+Sneakers ORIGINAL: Jordan 4=900-1400 new | Nike SB Dunk=700-2500 | Yeezy=800-2500 | Nike/Adidas classic=300-800
+Sneakers REPLICA: Jordan/Nike/Adidas replica=150-350 (ALWAYS 20-40% of authentic second-hand price)
+Luxury bags & accessories ORIGINAL second-hand: Louis Vuitton bag=1500-4000 | LV wallet/accessory=800-2500 | Gucci bag=1200-3500 | Gucci wallet=700-2000
+Luxury bags & accessories REPLICA: LV replica bag=200-500 | LV replica wallet=100-250 | Gucci replica=150-400
+
+KEY RULES:
+- ORIGINAL second-hand = 50-70% of new retail price
+- Condition multipliers: new=100%, like new=85%, good=70%, acceptable=55%
+- REPLICA = ALWAYS 20-40% of authentic second-hand equivalent (NOT of new retail price)
+- Price gap between replica and original MUST be significant (3-5x difference)`;
 
   const replicaReminder = productType === "replica"
     ? (isRo
