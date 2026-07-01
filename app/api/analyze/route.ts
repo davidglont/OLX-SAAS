@@ -57,7 +57,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Limita zilnica atinsa", used: usageCheck.used, limit: usageCheck.limit, code: "LIMIT_REACHED" }, { status: 403 });
     }
 
-    const result = await analyzeListingImages(body.images, body.description, body.platform, body.language, body.vintedType);
+    const isFree = (user?.plan ?? "free") === "free" && (user as { role?: string } | null)?.role !== "admin";
+    const imagesToProcess = isFree ? body.images.slice(0, 1) : body.images;
+    const result = await analyzeListingImages(imagesToProcess, body.description, body.platform, body.language, body.vintedType);
     const hasMarketAccess = ["proplus", "business"].includes(user?.plan ?? "") || (user as { role?: string } | null)?.role === "admin";
     if (!hasMarketAccess && result.market) delete result.market;
     return NextResponse.json(result);

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
-import { Copy, Check, Tag, Save, CheckCircle, Camera, Zap } from "lucide-react";
+import { Copy, Check, Tag, Save, CheckCircle, Camera, Zap, Lock } from "lucide-react";
 import PhotoCard from "./PhotoCard";
 import MarketInsights from "./MarketInsights";
 import type { AnalysisResult } from "@/lib/ai";
@@ -62,6 +62,7 @@ export default function ResultsPanel({ result, files, onSave, saved }: ResultsPa
   const plan = (session?.user as { plan?: string } | undefined)?.plan ?? "free";
   const role = (session?.user as { role?: string } | undefined)?.role ?? "user";
   const hasMarketAccess = ["proplus", "business"].includes(plan) || role === "admin";
+  const hasTagsAccess = plan !== "free" || role === "admin";
 
   async function handleSave() {
     setSaving(true);
@@ -139,19 +140,41 @@ export default function ResultsPanel({ result, files, onSave, saved }: ResultsPa
       </div>
 
       {/* Tags */}
-      <div className="card" style={{ padding: "24px" }}>
+      <div className="card" style={{ padding: "24px", position: "relative", overflow: "hidden" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
           <h3 style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "15px", color: "var(--color-foreground)" }}>{t("tags_label")}</h3>
-          <CopyButton text={result.tags.join(", ")} label={t("copy_all_tags")} />
+          {hasTagsAccess && <CopyButton text={result.tags.join(", ")} label={t("copy_all_tags")} />}
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-          {result.tags.map((tag) => (
-            <span key={tag} className="badge badge-primary" style={{ fontSize: "12px", padding: "4px 12px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
-              <Tag size={10} />
-              {tag}
-            </span>
-          ))}
-        </div>
+        {hasTagsAccess ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {result.tags.map((tag) => (
+              <span key={tag} className="badge badge-primary" style={{ fontSize: "12px", padding: "4px 12px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                <Tag size={10} />
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", filter: "blur(5px)", userSelect: "none", pointerEvents: "none" }}>
+              {["brand", "produs", "second hand", "ca nou", "ieftin", "calitate"].map((tag) => (
+                <span key={tag} className="badge badge-primary" style={{ fontSize: "12px", padding: "4px 12px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                  <Tag size={10} />
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "rgba(13,13,34,0.7)", backdropFilter: "blur(2px)", borderRadius: "inherit" }}>
+              <Lock size={20} color="var(--primary-light)" style={{ marginBottom: "8px" }} />
+              <p style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "13px", color: "var(--color-foreground)", marginBottom: "4px" }}>
+                {locale === "ro" ? "Taguri disponibile din Pro" : "Tags available from Pro"}
+              </p>
+              <p style={{ fontSize: "12px", color: "var(--color-muted-foreground)" }}>
+                {locale === "ro" ? "Upgrade pentru acces" : "Upgrade to unlock"}
+              </p>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Market Insights */}

@@ -51,7 +51,7 @@ export default function PhotoCard({ photo, file }: PhotoCardProps) {
         </div>
 
         {photo.isRecommendedCover && (
-          <div style={{ position: "absolute", top: "8px", right: "8px", background: "var(--primary)", borderRadius: "8px", padding: "3px 8px", display: "flex", alignItems: "center", gap: "4px" }}>
+          <div style={{ position: "absolute", bottom: "8px", right: "8px", background: "var(--primary)", borderRadius: "8px", padding: "3px 8px", display: "flex", alignItems: "center", gap: "4px" }}>
             <Star size={10} color="white" fill="white" />
             <span style={{ fontSize: "10px", color: "white", fontWeight: 700, fontFamily: "Rubik, sans-serif" }}>
               {t("cover_badge")}
