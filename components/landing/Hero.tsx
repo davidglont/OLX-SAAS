@@ -6,6 +6,13 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ArrowRight, Star, Zap, CheckCircle } from "lucide-react";
 
+function getActiveSellers(locale: string): string {
+  const START = new Date("2026-07-01").getTime();
+  const count = 150 + Math.max(0, Math.floor((Date.now() - START) / 86_400_000)) * 20;
+  const sep = locale === "ro" ? "." : ",";
+  return count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+
 export default function Hero() {
   const t = useTranslations("hero");
   const locale = useLocale();
@@ -71,7 +78,9 @@ export default function Hero() {
               <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--primary-light)", fontFamily: "Rubik,sans-serif", letterSpacing: "0.06em" }}>AI</span>
             </div>
             <span className="hero-live-dot" aria-hidden="true" />
-            <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)" }}>{t("badge")}</span>
+            <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-foreground)" }}>
+              {getActiveSellers(locale)} {locale === "ro" ? "vânzători activi" : "active sellers"}
+            </span>
           </div>
 
           <h1

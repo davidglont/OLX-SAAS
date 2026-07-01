@@ -5,6 +5,12 @@ import { X, Flame } from "lucide-react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 
+function getActiveSellers(): string {
+  const START = new Date("2026-07-01").getTime();
+  const count = 150 + Math.max(0, Math.floor((Date.now() - START) / 86_400_000)) * 20;
+  return count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 export default function AnnouncementBar() {
   const [dismissed, setDismissed] = useState(false);
   const locale = useLocale();
@@ -27,7 +33,7 @@ export default function AnnouncementBar() {
         </div>
         <div className="ann-hide-mobile" style={{ width: "1px", height: "14px", background: "rgba(245,236,215,0.2)", flexShrink: 0 }} />
         <span style={{ fontSize: "13px", color: "#F5ECD7" }}>
-          <strong style={{ color: "#F5B731" }}>1.247 vânzători</strong> activi — Pro la{" "}
+          <strong style={{ color: "#F5B731" }}>{getActiveSellers()} vânzători</strong> activi — Pro la{" "}
           <strong style={{ color: "#F5B731" }}>€10/lună</strong>, prețul va crește
         </span>
         <Link
