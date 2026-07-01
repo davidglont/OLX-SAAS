@@ -7,7 +7,11 @@ import Link from "next/link";
 
 function getActiveSellers(): string {
   const START = new Date("2026-07-01").getTime();
-  const count = 150 + Math.max(0, Math.floor((Date.now() - START) / 86_400_000)) * 20;
+  const days = Math.max(0, Math.floor((Date.now() - START) / 86_400_000));
+  let count = 150;
+  for (let i = 0; i < days; i++) {
+    count += 20 + ((i * 17 + 3) % 11);
+  }
   return count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
