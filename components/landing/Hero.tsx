@@ -170,21 +170,21 @@ export default function Hero() {
           </div>
 
           {/* Floating chips */}
-          <div className="glass-card" style={{ position: "absolute", top: "24px", right: "-20px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
+          <div className="glass-card" style={{ position: "absolute", top: "-20px", left: "-24px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
+            <Zap size={20} color="#F59E0B" fill="#F59E0B" />
+            <div>
+              <div style={{ fontSize: "12px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>10 secunde</div>
+              <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)" }}>generare AI</div>
+            </div>
+          </div>
+
+          <div className="glass-card" style={{ position: "absolute", bottom: "-18px", right: "-24px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
             <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#10B981,#059669)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <CheckCircle size={17} color="white" />
             </div>
             <div>
               <div style={{ fontSize: "12px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>Salvat!</div>
               <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)" }}>OLX + Vinted</div>
-            </div>
-          </div>
-
-          <div className="glass-card" style={{ position: "absolute", bottom: "24px", left: "-20px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
-            <Zap size={20} color="#F59E0B" fill="#F59E0B" />
-            <div>
-              <div style={{ fontSize: "12px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>10 secunde</div>
-              <div style={{ fontSize: "11px", color: "var(--color-muted-foreground)" }}>generare AI</div>
             </div>
           </div>
         </div>
