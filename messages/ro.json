@@ -81,6 +81,12 @@
     "t6_text": "De la 30 de vizualizări la 120 în prima zi după AnunțAI. Schimbă complet jocul pe OLX.",
     "t6_name": "Mihai D.",
     "t6_location": "Constanța",
+    "t7_text": "Am încercat tot felul de metode să vând mai repede. AnunțAI e singurul lucru care a funcționat cu adevărat.",
+    "t7_name": "Cristian B.",
+    "t7_location": "Sibiu",
+    "t8_text": "Tagurile generate automat mi-au dublat numărul de căutări organice pe OLX. Incredibil.",
+    "t8_name": "Ioana P.",
+    "t8_location": "Oradea",
     "verified": "Verificat"
   },
   "pricing": {
@@ -153,7 +159,13 @@
     "tip5_stat": "⭐ rating mai bun",
     "tip6_title": "Taguri strategice",
     "tip6_desc": "8-12 taguri mixate — brand + categorie + stare + model. Acoperă toate variantele de căutare.",
-    "tip6_stat": "+60% descoperire"
+    "tip6_stat": "+60% descoperire",
+    "tip7_title": "Primele 48 ore",
+    "tip7_desc": "Anunțurile noi primesc un boost de vizibilitate. Răspunde rapid la mesaje pentru a menține algoritmul activ.",
+    "tip7_stat": "3× mai mult trafic",
+    "tip8_title": "Prețul de negociere",
+    "tip8_desc": "Setează prețul cu 10-15% mai mare decât ținta ta. Lasă loc de negociere — cumpărătorii se simt câștigători.",
+    "tip8_stat": "+20% deal reușit"
   },
   "tool": {
     "title": "Generează Anunțul Tău",

@@ -119,7 +119,7 @@ export default function Hero() {
               </div>
               <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)", fontWeight: 500 }}>4.9/5</span>
             </div>
-            {[t("trust1"), t("trust2"), t("trust3")].map(item => (
+            {[t("trust1"), t("trust2")].map(item => (
               <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <CheckCircle size={14} color="var(--success)" />
                 <span style={{ fontSize: "13px", color: "var(--color-muted-foreground)" }}>{item}</span>
@@ -170,7 +170,7 @@ export default function Hero() {
           </div>
 
           {/* Floating chips */}
-          <div className="glass-card" style={{ position: "absolute", top: "-22px", right: "-28px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
+          <div className="glass-card" style={{ position: "absolute", top: "24px", right: "-20px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
             <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#10B981,#059669)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <CheckCircle size={17} color="white" />
             </div>
@@ -180,7 +180,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="glass-card" style={{ position: "absolute", bottom: "-18px", left: "-24px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
+          <div className="glass-card" style={{ position: "absolute", bottom: "24px", left: "-20px", padding: "11px 15px", display: "flex", alignItems: "center", gap: "9px", boxShadow: "0 8px 32px rgba(0,0,0,0.45)", zIndex: 2 }}>
             <Zap size={20} color="#F59E0B" fill="#F59E0B" />
             <div>
               <div style={{ fontSize: "12px", fontWeight: 700, fontFamily: "Rubik,sans-serif", color: "var(--color-foreground)" }}>10 secunde</div>

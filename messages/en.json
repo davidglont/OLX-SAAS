@@ -81,6 +81,12 @@
     "t6_text": "From 30 views to 120 on the first day after AnuntAI. Completely changes the game on OLX.",
     "t6_name": "Mihai D.",
     "t6_location": "Constanța",
+    "t7_text": "I tried every method to sell faster. AnuntAI is the only thing that actually worked.",
+    "t7_name": "Cristian B.",
+    "t7_location": "Sibiu",
+    "t8_text": "The auto-generated tags doubled my organic searches on OLX. Incredible.",
+    "t8_name": "Ioana P.",
+    "t8_location": "Oradea",
     "verified": "Verified"
   },
   "pricing": {
@@ -153,7 +159,13 @@
     "tip5_stat": "⭐ better rating",
     "tip6_title": "Strategic tags",
     "tip6_desc": "8-12 mixed tags — brand + category + condition + model. Cover all search variations.",
-    "tip6_stat": "+60% discovery"
+    "tip6_stat": "+60% discovery",
+    "tip7_title": "First 48 hours",
+    "tip7_desc": "New listings get a visibility boost. Reply to messages quickly to keep the algorithm active.",
+    "tip7_stat": "3× more traffic",
+    "tip8_title": "Negotiation price",
+    "tip8_desc": "Set your price 10-15% above your target. Leave room to negotiate — buyers feel like they're winning.",
+    "tip8_stat": "+20% deal success"
   },
   "tool": {
     "title": "Generate Your Listing",

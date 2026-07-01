@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Star, MapPin, TrendingUp, Clock, Award } from "lucide-react";
+import { Star, MapPin, TrendingUp, Clock, Award, Zap } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -21,18 +21,22 @@ export default function SocialProof() {
   ];
 
   const testimonials = [
-    { text: t("t1_text"), name: t("t1_name"), location: t("t1_location") },
-    { text: t("t2_text"), name: t("t2_name"), location: t("t2_location") },
-    { text: t("t3_text"), name: t("t3_name"), location: t("t3_location") },
-    { text: t("t4_text"), name: t("t4_name"), location: t("t4_location") },
-    { text: t("t5_text"), name: t("t5_name"), location: t("t5_location") },
-    { text: t("t6_text"), name: t("t6_name"), location: t("t6_location") },
-    { text: t("t1_text"), name: t("t1_name"), location: t("t1_location") },
-    { text: t("t2_text"), name: t("t2_name"), location: t("t2_location") },
-    { text: t("t3_text"), name: t("t3_name"), location: t("t3_location") },
-    { text: t("t4_text"), name: t("t4_name"), location: t("t4_location") },
-    { text: t("t5_text"), name: t("t5_name"), location: t("t5_location") },
-    { text: t("t6_text"), name: t("t6_name"), location: t("t6_location") },
+    { text: t("t1_text"), name: t("t1_name"), location: t("t1_location"), stars: 5 },
+    { text: t("t2_text"), name: t("t2_name"), location: t("t2_location"), stars: 5 },
+    { text: t("t3_text"), name: t("t3_name"), location: t("t3_location"), stars: 5 },
+    { text: t("t4_text"), name: t("t4_name"), location: t("t4_location"), stars: 5 },
+    { text: t("t5_text"), name: t("t5_name"), location: t("t5_location"), stars: 5 },
+    { text: t("t6_text"), name: t("t6_name"), location: t("t6_location"), stars: 5 },
+    { text: t("t7_text"), name: t("t7_name"), location: t("t7_location"), stars: 5 },
+    { text: t("t8_text"), name: t("t8_name"), location: t("t8_location"), stars: 5 },
+    { text: t("t1_text"), name: t("t1_name"), location: t("t1_location"), stars: 5 },
+    { text: t("t2_text"), name: t("t2_name"), location: t("t2_location"), stars: 5 },
+    { text: t("t3_text"), name: t("t3_name"), location: t("t3_location"), stars: 5 },
+    { text: t("t4_text"), name: t("t4_name"), location: t("t4_location"), stars: 5 },
+    { text: t("t5_text"), name: t("t5_name"), location: t("t5_location"), stars: 5 },
+    { text: t("t6_text"), name: t("t6_name"), location: t("t6_location"), stars: 5 },
+    { text: t("t7_text"), name: t("t7_name"), location: t("t7_location"), stars: 5 },
+    { text: t("t8_text"), name: t("t8_name"), location: t("t8_location"), stars: 5 },
   ];
 
   useEffect(() => {

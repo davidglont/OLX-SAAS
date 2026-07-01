@@ -2,14 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Camera, Type, Tag, Clock, Heart, Hash } from "lucide-react";
+import { Camera, Type, Tag, Clock, Heart, Hash, Zap, TrendingUp } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ICONS = [Camera, Type, Tag, Clock, Heart, Hash];
-const COLORS = ["#D4991A", "#E07B39", "#D4991A", "#E07B39", "#D4991A", "#E07B39"];
+const ICONS = [Camera, Type, Tag, Clock, Heart, Hash, Zap, TrendingUp];
+const COLORS = ["#D4991A", "#E07B39", "#D4991A", "#E07B39", "#D4991A", "#E07B39", "#D4991A", "#E07B39"];
 
 export default function RecommendationsSection() {
   const t = useTranslations("recommendations");
@@ -24,6 +24,8 @@ export default function RecommendationsSection() {
     { key: "tip4", stat: t("tip4_stat") },
     { key: "tip5", stat: t("tip5_stat") },
     { key: "tip6", stat: t("tip6_stat") },
+    { key: "tip7", stat: t("tip7_stat") },
+    { key: "tip8", stat: t("tip8_stat") },
   ];
 
   useEffect(() => {
