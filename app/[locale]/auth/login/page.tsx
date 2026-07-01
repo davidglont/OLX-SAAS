@@ -5,7 +5,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Zap, Mail, Lock, AlertCircle } from "lucide-react";
+import { Zap, Mail, Lock, AlertCircle, Eye, EyeOff, CheckCircle } from "lucide-react";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
@@ -14,12 +14,19 @@ export default function LoginPage() {
   const { status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [justVerified, setJustVerified] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") router.push(`/${locale}/tool`);
   }, [status, locale, router]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setJustVerified(params.get("verified") === "1");
+  }, []);
 
   if (status === "loading" || status === "authenticated") {
     return (
@@ -33,8 +40,13 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setError(locale === "ro" ? "Adresa de email nu este validă." : "Invalid email address.");
+      return;
+    }
     setLoading(true);
-    const res = await signIn("credentials", { email: email.toLowerCase(), password, redirect: false });
+    const res = await signIn("credentials", { email: email.toLowerCase().trim(), password, redirect: false });
     setLoading(false);
     if (res?.error) {
       setError(locale === "ro" ? "Email sau parolă incorectă." : "Incorrect email or password.");
@@ -62,6 +74,15 @@ export default function LoginPage() {
           <p style={{ textAlign: "center", color: "var(--color-muted-foreground)", fontSize: "14px", marginBottom: "28px" }}>
             {t("login_subtitle")}
           </p>
+
+          {justVerified && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: "10px", padding: "10px 14px", marginBottom: "16px" }}>
+              <CheckCircle size={15} color="var(--success)" />
+              <span style={{ fontSize: "13px", color: "var(--success)" }}>
+                {locale === "ro" ? "Email confirmat! Te poți autentifica acum." : "Email confirmed! You can now sign in."}
+              </span>
+            </div>
+          )}
 
           {error && (
             <div role="alert" aria-live="assertive" style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "10px", padding: "10px 14px", marginBottom: "16px" }}>
@@ -92,7 +113,24 @@ export default function LoginPage() {
               </div>
               <div style={{ position: "relative" }}>
                 <Lock size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" placeholder="••••••••" style={{ paddingLeft: "36px" }} />
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  style={{ paddingLeft: "36px", paddingRight: "40px" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? (locale === "ro" ? "Ascunde parola" : "Hide password") : (locale === "ro" ? "Arată parola" : "Show password")}
+                  style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--color-muted-foreground)", padding: 0, display: "flex", alignItems: "center" }}
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
               </div>
             </div>
 

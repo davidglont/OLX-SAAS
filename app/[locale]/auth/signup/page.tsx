@@ -1,11 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Zap, Mail, Lock, User, AlertCircle, CheckCircle } from "lucide-react";
+import { Zap, Mail, Lock, User, AlertCircle, CheckCircle, Eye, EyeOff } from "lucide-react";
+
+const BLOCKED_DOMAINS = new Set([
+  "mailinator.com","guerrillamail.com","guerrillamail.info","guerrillamail.biz",
+  "guerrillamail.de","guerrillamail.net","guerrillamail.org","guerrillamailblock.com",
+  "grr.la","sharklasers.com","spam4.me","yopmail.com","trashmail.com","trashmail.at",
+  "trashmail.io","trashmail.me","trashmail.net","trashmail.xyz","10minutemail.com",
+  "10minutemail.net","10minutemail.org","temp-mail.org","tempmail.com","fakeinbox.com",
+  "dispostable.com","maildrop.cc","getnada.com","throwaway.email","tempr.email",
+  "discard.email","mailnull.com","spamgourmet.com","spamgourmet.net","spamgourmet.org",
+  "spam.la","crapmail.org","mailnew.com","ownmail.net","spamdecoy.net",
+]);
 
 export default function SignupPage() {
   const t = useTranslations("auth");
@@ -15,9 +26,11 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [terms, setTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") router.push(`/${locale}/tool`);
@@ -32,9 +45,63 @@ export default function SignupPage() {
     );
   }
 
+  if (emailSent) {
+    return (
+      <main style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", background: "var(--bg)" }}>
+        <div style={{ width: "100%", maxWidth: "420px" }}>
+          <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "32px", textDecoration: "none" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px var(--primary-glow)" }}>
+              <Zap size={20} color="white" fill="white" />
+            </div>
+            <span style={{ fontFamily: "Rubik, sans-serif", fontWeight: 700, fontSize: "20px", color: "var(--color-foreground)" }}>
+              Anunț<span style={{ color: "var(--primary-light)" }}>AI</span>
+            </span>
+          </Link>
+          <div className="card auth-card" style={{ padding: "40px 32px", textAlign: "center" }}>
+            <div style={{ width: "60px", height: "60px", borderRadius: "50%", background: "rgba(34,197,94,0.1)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+              <Mail size={28} color="var(--success)" />
+            </div>
+            <h1 style={{ fontFamily: "Rubik, sans-serif", fontSize: "22px", fontWeight: 700, marginBottom: "10px", color: "var(--color-foreground)" }}>
+              {locale === "ro" ? "Verifică emailul!" : "Check your email!"}
+            </h1>
+            <p style={{ color: "var(--color-muted-foreground)", fontSize: "14px", lineHeight: 1.6, marginBottom: "8px" }}>
+              {locale === "ro"
+                ? <><span>Am trimis un link de confirmare la </span><strong style={{ color: "var(--color-foreground)" }}>{email}</strong>.</>
+                : <><span>We sent a confirmation link to </span><strong style={{ color: "var(--color-foreground)" }}>{email}</strong>.</>}
+            </p>
+            <p style={{ color: "var(--color-muted-foreground)", fontSize: "13px", marginBottom: "28px" }}>
+              {locale === "ro" ? "Click pe link din email pentru a-ți activa contul." : "Click the link in the email to activate your account."}
+            </p>
+            <Link
+              href={`/${locale}/auth/login`}
+              className="btn-primary"
+              style={{ display: "inline-flex", justifyContent: "center", width: "100%", padding: "13px", fontSize: "15px" }}
+            >
+              {locale === "ro" ? "Mergi la autentificare" : "Go to sign in"}
+            </Link>
+            <p style={{ marginTop: "16px", fontSize: "12px", color: "var(--color-muted-foreground)" }}>
+              {locale === "ro" ? "Nu ai primit emailul? Verifică folderul Spam." : "Didn't receive it? Check your Spam folder."}
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setError(locale === "ro" ? "Adresa de email nu este validă." : "Invalid email address.");
+      return;
+    }
+    const domain = email.trim().toLowerCase().split("@")[1] ?? "";
+    if (BLOCKED_DOMAINS.has(domain)) {
+      setError(locale === "ro" ? "Te rugăm să folosești o adresă reală (Gmail, Yahoo etc.)." : "Please use a real email address (Gmail, Yahoo, etc.).");
+      return;
+    }
     if (password.length < 8) {
       setError(locale === "ro" ? "Parola trebuie să aibă cel puțin 8 caractere." : "Password must be at least 8 characters.");
       return;
@@ -43,21 +110,24 @@ export default function SignupPage() {
       setError(locale === "ro" ? "Trebuie să accepți termenii și condițiile." : "You must accept the terms and conditions.");
       return;
     }
+
     setLoading(true);
-    const normalizedEmail = email.toLowerCase();
+    const normalizedEmail = email.toLowerCase().trim();
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email: normalizedEmail, password }),
     });
+
     if (!res.ok) {
       const data = await res.json();
       setError(data.error ?? (locale === "ro" ? "Eroare la înregistrare." : "Registration error."));
       setLoading(false);
       return;
     }
-    await signIn("credentials", { email: normalizedEmail, password, redirect: false });
-    router.push(`/${locale}/tool`);
+
+    setLoading(false);
+    setEmailSent(true);
   }
 
   const benefits = locale === "ro"
@@ -113,7 +183,7 @@ export default function SignupPage() {
               <label htmlFor="signup-email" style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("email")}</label>
               <div style={{ position: "relative" }}>
                 <Mail size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input id="signup-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="exemplu@email.com" style={{ paddingLeft: "36px" }} />
+                <input id="signup-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="exemplu@gmail.com" style={{ paddingLeft: "36px" }} />
               </div>
             </div>
 
@@ -121,7 +191,25 @@ export default function SignupPage() {
               <label htmlFor="signup-password" style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "6px", color: "var(--color-foreground)" }}>{t("password")}</label>
               <div style={{ position: "relative" }}>
                 <Lock size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-muted-foreground)", pointerEvents: "none" }} />
-                <input id="signup-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" minLength={8} placeholder="••••••••" style={{ paddingLeft: "36px" }} />
+                <input
+                  id="signup-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                  minLength={8}
+                  placeholder="••••••••"
+                  style={{ paddingLeft: "36px", paddingRight: "40px" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? (locale === "ro" ? "Ascunde parola" : "Hide password") : (locale === "ro" ? "Arată parola" : "Show password")}
+                  style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--color-muted-foreground)", padding: 0, display: "flex", alignItems: "center" }}
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
               </div>
               <p style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px" }}>
                 {locale === "ro" ? "Minimum 8 caractere" : "Minimum 8 characters"}
