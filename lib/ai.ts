@@ -1,11 +1,12 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-const MODEL = "gemini-2.0-flash";
+const TEXT_MODEL = "llama-3.3-70b-versatile";
+const VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
 
 function getClient() {
-  const apiKey = process.env.GOOGLE_AI_API_KEY;
-  if (!apiKey) throw new Error("GOOGLE_AI_API_KEY nu este setat in variabilele de mediu.");
-  return new GoogleGenerativeAI(apiKey);
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error("GROQ_API_KEY nu este setat in variabilele de mediu.");
+  return new Groq({ apiKey });
 }
 
 async function withRetry<T>(fn: () => Promise<T>, attempts = 2): Promise<T> {
@@ -26,28 +27,44 @@ async function withRetry<T>(fn: () => Promise<T>, attempts = 2): Promise<T> {
 
 async function generateText(prompt: string, systemInstruction?: string, maxTokens = 1000, temperature = 0.3): Promise<string> {
   return withRetry(async () => {
-    const model = getClient().getGenerativeModel({
-      model: MODEL,
-      systemInstruction: systemInstruction ?? undefined,
-      generationConfig: { maxOutputTokens: maxTokens, temperature },
+    const messages: Groq.Chat.ChatCompletionMessageParam[] = [];
+    if (systemInstruction) {
+      messages.push({ role: "system", content: systemInstruction });
+    }
+    messages.push({ role: "user", content: prompt });
+
+    const completion = await getClient().chat.completions.create({
+      model: TEXT_MODEL,
+      messages,
+      max_tokens: maxTokens,
+      temperature,
     });
-    const result = await model.generateContent(prompt, { timeout: 25_000 });
-    return result.response.text();
+    return completion.choices[0]?.message?.content ?? "";
   });
 }
 
 async function generateWithImages(images: { data: string; mediaType: string }[], prompt: string, maxTokens = 3000, temperature = 0.3): Promise<string> {
   return withRetry(async () => {
-    const model = getClient().getGenerativeModel({
-      model: MODEL,
-      generationConfig: { maxOutputTokens: maxTokens, temperature },
+    const imageContent: Groq.Chat.ChatCompletionContentPart[] = images.map(img => ({
+      type: "image_url" as const,
+      image_url: { url: `data:${img.mediaType};base64,${img.data}` },
+    }));
+
+    const completion = await getClient().chat.completions.create({
+      model: VISION_MODEL,
+      messages: [
+        {
+          role: "user",
+          content: [
+            ...imageContent,
+            { type: "text", text: prompt },
+          ],
+        },
+      ],
+      max_tokens: maxTokens,
+      temperature,
     });
-    const parts = [
-      ...images.map(img => ({ inlineData: { data: img.data, mimeType: img.mediaType } })),
-      { text: prompt },
-    ];
-    const result = await model.generateContent(parts, { timeout: 45_000 });
-    return result.response.text();
+    return completion.choices[0]?.message?.content ?? "";
   });
 }
 
@@ -327,8 +344,7 @@ Return ONLY valid JSON:
   "negotiationTips": ["Tip 1", "Tip 2", "Tip 3"]
 }`;
 
-  const fullPrompt = `${systemMessage}\n\n${userPrompt}`;
-  const text = await generateText(fullPrompt, undefined, 800, 0.2);
+  const text = await generateText(userPrompt, systemMessage, 800, 0.2);
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("Invalid AI response");
   return JSON.parse(jsonMatch[0]) as PriceEstimate;
