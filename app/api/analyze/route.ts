@@ -6,6 +6,7 @@ import { analyzeListingImages } from "@/lib/ai";
 import { checkAndIncrementUsage } from "@/lib/usage";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { prisma } from "@/lib/db";
+import { logError } from "@/lib/logError";
 
 export const maxDuration = 60;
 
@@ -67,6 +68,8 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : "Eroare necunoscuta";
     const cause = err instanceof Error && err.cause ? ` | cause: ${String(err.cause)}` : "";
     const fullMessage = `${message}${cause}`;
+    const session = await getServerSession(authOptions).catch(() => null);
+    await logError("/api/analyze", fullMessage.slice(0, 500), session?.user?.id, session?.user?.email ?? undefined);
     const isAIError = message.includes("API key") || message.includes("GOOGLE") || message.includes("GROQ") || message.includes("model") || message.includes("quota") || message.includes("API_KEY");
     return NextResponse.json(
       { error: isAIError ? `Serviciul AI indisponibil: ${fullMessage.slice(0, 400)}` : `Eroare de server: ${fullMessage.slice(0, 400)}` },

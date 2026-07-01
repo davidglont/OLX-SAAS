@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import { Users, BarChart2, Zap, FileText, Shield, X, ChevronDown, RefreshCw } from "lucide-react";
+import { Users, BarChart2, Zap, FileText, Shield, X, ChevronDown, RefreshCw, AlertTriangle, KeyRound } from "lucide-react";
 
 interface UserRow {
   id: string;
@@ -16,6 +16,15 @@ interface UserRow {
   createdAt: string;
   usageLogs: { count: number }[];
   _count: { listings: number };
+}
+
+interface ErrorLogRow {
+  id: string;
+  userId: string | null;
+  userEmail: string | null;
+  route: string;
+  message: string;
+  createdAt: string;
 }
 
 interface Stats {
@@ -50,17 +59,22 @@ export default function AdminPage() {
   const [editPlan, setEditPlan] = useState("free");
   const [editRole, setEditRole] = useState("user");
   const [editLimit, setEditLimit] = useState("");
+  const [editPassword, setEditPassword] = useState("");
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
+  const [errorLogs, setErrorLogs] = useState<ErrorLogRow[]>([]);
+  const [activeTab, setActiveTab] = useState<"users" | "errors">("users");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [s, u] = await Promise.all([
+    const [s, u, e] = await Promise.all([
       fetch("/api/admin/stats").then((r) => r.json()),
       fetch("/api/admin/users").then((r) => r.json()),
+      fetch("/api/admin/errors").then((r) => r.json()),
     ]);
     setStats(s);
     setUsers(Array.isArray(u) ? u : []);
+    setErrorLogs(Array.isArray(e) ? e : []);
     setLoading(false);
   }, []);
 
@@ -78,6 +92,7 @@ export default function AdminPage() {
     setEditPlan(u.plan);
     setEditRole(u.role);
     setEditLimit(u.usageLimit === null ? "" : String(u.usageLimit));
+    setEditPassword("");
   }
 
   async function saveEdit() {
@@ -87,10 +102,11 @@ export default function AdminPage() {
     await fetch("/api/admin/users/" + editUser.id, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plan: editPlan, role: editRole, usageLimit }),
+      body: JSON.stringify({ plan: editPlan, role: editRole, usageLimit, ...(editPassword ? { newPassword: editPassword } : {}) }),
     });
     setSaving(false);
     setEditUser(null);
+    setEditPassword("");
     fetchData();
   }
 
@@ -157,6 +173,50 @@ export default function AdminPage() {
         </div>
       )}
 
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
+        {(["users", "errors"] as const).map((tab) => (
+          <button key={tab} onClick={() => setActiveTab(tab)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 18px", borderRadius: "10px", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: 600, background: activeTab === tab ? "rgba(212,153,26,0.15)" : "rgba(255,255,255,0.05)", color: activeTab === tab ? "var(--primary-light)" : "var(--color-muted-foreground)", transition: "all 0.15s" }}>
+            {tab === "users" ? <><Users size={14} /> Utilizatori</> : <><AlertTriangle size={14} /> Loguri erori {errorLogs.length > 0 && <span style={{ background: "#DC2626", color: "white", borderRadius: "20px", padding: "1px 7px", fontSize: "10px", fontWeight: 700 }}>{errorLogs.length}</span>}</>}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "errors" && (
+        <div className="card" style={{ padding: 0, overflow: "hidden", marginBottom: "24px" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(212,153,26,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontFamily: "Rubik,sans-serif", fontWeight: 700, fontSize: "14px", color: "var(--color-foreground)" }}>Ultimele 100 erori</span>
+            <span style={{ fontSize: "12px", color: "var(--color-muted-foreground)" }}>{errorLogs.length} total</span>
+          </div>
+          {errorLogs.length === 0 ? (
+            <div style={{ padding: "40px", textAlign: "center", color: "var(--color-muted-foreground)", fontSize: "14px" }}>Nicio eroare înregistrată.</div>
+          ) : (
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid rgba(212,153,26,0.1)" }}>
+                    {["Data", "Rută", "User", "Mesaj eroare"].map((h) => (
+                      <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: "11px", fontWeight: 700, color: "var(--color-muted-foreground)", textTransform: "uppercase", letterSpacing: "0.07em", whiteSpace: "nowrap" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {errorLogs.map((log, i) => (
+                    <tr key={log.id} style={{ borderBottom: i < errorLogs.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+                      <td style={{ padding: "12px 16px", fontSize: "11px", color: "var(--color-muted-foreground)", whiteSpace: "nowrap" }}>{new Date(log.createdAt).toLocaleString("ro-RO")}</td>
+                      <td style={{ padding: "12px 16px" }}><span style={{ fontSize: "11px", fontFamily: "monospace", background: "rgba(220,38,38,0.1)", color: "#F87171", padding: "2px 8px", borderRadius: "6px" }}>{log.route}</span></td>
+                      <td style={{ padding: "12px 16px", fontSize: "12px", color: "var(--color-foreground)" }}>{log.userEmail ?? <span style={{ color: "var(--color-muted-foreground)" }}>—</span>}</td>
+                      <td style={{ padding: "12px 16px", fontSize: "12px", color: "var(--color-muted-foreground)", maxWidth: "500px" }}><div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{log.message}</div></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === "users" && <>
       <div style={{ marginBottom: "16px" }}>
         <input type="text" placeholder="Cauta dupa email sau nume..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ maxWidth: "360px", fontSize: "14px" }} />
       </div>
@@ -206,6 +266,7 @@ export default function AdminPage() {
           </table>
         </div>
       </div>
+      </> }
 
       {editUser && (
         <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }} onClick={() => setEditUser(null)}>
@@ -235,6 +296,11 @@ export default function AdminPage() {
                 <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--color-foreground)", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Limita zilnica custom</label>
                 <input type="number" value={editLimit} onChange={(e) => setEditLimit(e.target.value)} placeholder="-1 = nelimitat, gol = plan default" style={{ width: "100%" }} />
                 <p style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px" }}>-1 nelimitat &middot; gol = plan default &middot; numar = limita custom</p>
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--color-foreground)", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.06em", display: "flex", alignItems: "center", gap: "6px" }}><KeyRound size={12} /> Resetare parolă</label>
+                <input type="password" value={editPassword} onChange={(e) => setEditPassword(e.target.value)} placeholder="Lasă gol dacă nu schimbi" style={{ width: "100%" }} />
+                <p style={{ fontSize: "11px", color: "var(--color-muted-foreground)", marginTop: "4px" }}>Gol = parola rămâne neschimbată</p>
               </div>
             </div>
             <div style={{ display: "flex", gap: "10px", marginTop: "24px" }}>

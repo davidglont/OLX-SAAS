@@ -90,3 +90,12 @@ model PasswordResetToken {
   expires   DateTime
   createdAt DateTime @default(now())
 }
+
+model ErrorLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  userEmail String?
+  route     String
+  message   String
+  createdAt DateTime @default(now())
+}
